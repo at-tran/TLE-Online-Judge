@@ -1,0 +1,32 @@
+{
+  "name": "tle-online-judge",
+  "version": "1.0.0",
+  "description": "An Online Judge for Computer Science teachers and students",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TashaGospel/TLE-Online-Judge.git"
+  },
+  "keywords": [
+    "online",
+    "judge",
+    "c++",
+    "pascal",
+    "node",
+    "express",
+    "javascript",
+    "react"
+  ],
+  "author": "Nguyen Phuc Khang, Bui Phan Tho, Tran Anh Tuan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TashaGospel/TLE-Online-Judge/issues"
+  },
+  "homepage": "https://github.com/TashaGospel/TLE-Online-Judge#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
