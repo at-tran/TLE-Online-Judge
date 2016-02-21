@@ -12,7 +12,7 @@ app.set('view engine', 'jade');
 // app.locals.pretty = true;
 
 app.get('/', function (request, response) {
-    exec('echo "' + Date() + '" > last_request', function(error, stdout, stderr) {
+    exec('echo hello > last_request && ls', function(error, stdout, stderr) {
         response.writeHead(200);
         response.write('stdout: ' + stdout + '\n');
         response.write('stderr: ' + stderr + '\n');
