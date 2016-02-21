@@ -13,13 +13,15 @@ app.set('view engine', 'jade');
 
 app.get('/', function (request, response) {
     exec('echo "' + Date() + '" > last_request', function(error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
+        response.writeHead(200);
+        response.write('stdout: ' + stdout + '\n');
+        response.write('stderr: ' + stderr + '\n');
         if (error !== null) {
-            console.log('exec error: ' + error);
+            response.write('exec error: ' + error);
         }
+        response.end();
     });
-    response.redirect('/homepage.html');
+    // response.redirect('/homepage.html');
 });
 
 function renderPage(response, file) {
