@@ -3,8 +3,8 @@ var url = process.env.MONGOLAB_URI;
 
 module.exports = function(request, response, callback) {
     MongoClient.connect(url, function(err, db) {
-        if (!err)
-            db.collection('users').find({
+        if (err) callback(err);
+        else db.collection('users').find({
                 'username': request.body.username,
                 'password': request.body.password
             }).limit(1).next(function(err, result) {
@@ -18,6 +18,5 @@ module.exports = function(request, response, callback) {
                     }
                 else callback(err);
             });
-        else callback(err);
     })
 };
