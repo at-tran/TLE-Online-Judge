@@ -8,6 +8,8 @@ var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
 var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
+var multer = require('multer');
+var upload = multer({dest: './uploads'});
 
 app.use(session({
     secret: randString(10),
@@ -48,6 +50,11 @@ app.post('/signup', function(request, response) {
         if (!err) response.redirect('/login.html');
         else response.redirect('/error.html');
     })
+});
+
+app.post('/upload', upload.single('submission'), function(request, response) {
+    console.log('Received file ' + JSON.stringify(request.file));
+    response.redirect('/');
 });
 
 app.use(express.static('public'));
