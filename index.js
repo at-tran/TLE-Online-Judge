@@ -10,12 +10,14 @@ var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
 var multer = require('multer');
 var upload = multer({dest: './uploads'});
+var MongoStore = require('connect-mongo')(session);
 
 app.use(session({
     secret: randString(10),
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
-    resave: false
+    resave: false,
+    store: new MongoStore({url: process.env.MONGOLAB_URI})
 }));
 
 app.use(bodyParser.json());
@@ -52,8 +54,8 @@ app.post('/signup', function(request, response) {
     })
 });
 
-app.post('/upload', upload.single('submission'), function(request, response) {
-    console.log('Received file ' + JSON.stringify(request.file));
+app.post('/upload', upload.any(), function(request, response) {
+    console.log('Received file ' + JSON.stringify(request.files));
     response.redirect('/');
 });
 

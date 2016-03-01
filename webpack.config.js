@@ -1,10 +1,10 @@
 module.exports = {
     entry: {
-        home: './pages/scripts/home.js',
-        scores: '.pages/scripts/scores.js'
+        // home: './pages/scripts/home.js',
+        scores: './pages/scripts/scores.js'
     },
     output: {
-        path: './public/scripts/pages',
+        path: './public/scripts',
         filename: '[name].js'
     },
     module: {
