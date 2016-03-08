@@ -10,14 +10,14 @@ var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
 var multer = require('multer');
 var upload = multer({dest: './uploads'});
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-redis')(session);
 
 app.use(session({
     secret: randString(10),
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
     resave: false,
-    store: new MongoStore({url: process.env.MONGOLAB_URI})
+    store: new RedisStore({url: process.env.REDIS_URL})
 }));
 
 app.use(bodyParser.json());
@@ -41,10 +41,10 @@ app.get('/:file', function(request, response, next) {
 });
 
 app.post('/login', function(request, response) {
-   login(request, response, function(err) {
-       if (!err) response.redirect('/');
-       else response.redirect('/error.html');
-   })
+    login(request, response, function(err) {
+        if (!err) response.redirect('/');
+        else response.redirect('/error.html');
+    })
 });
 
 app.post('/signup', function(request, response) {

@@ -10,7 +10,7 @@ module.exports = function(request, response, callback) {
             }).limit(1).next(function(err, result) {
                 db.close();
                 if (!err)
-                    if (!result) callback('Not found');
+                    if (!result) callback(new Error('Not found'));
                     else {
                         var sess = request.session;
                         sess.username = result.username;
