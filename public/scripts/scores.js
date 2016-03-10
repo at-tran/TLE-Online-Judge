@@ -59,6 +59,8 @@
 	        $.each(files, function (key, value) {
 	            data.append(key, value);
 	        });
+	        console.log(files);
+	        console.log(data);
 
 	        $.ajax('upload', {
 	            type: 'POST',

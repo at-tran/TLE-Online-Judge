@@ -10,8 +10,9 @@ function queueSubmission(file) {
     }).removeOnComplete(true).save();
 }
 
-module.exports = function(files) {
+module.exports = function(files, username) {
     files.forEach(function(file) {
+        file.username = username;
         queueSubmission(file);
     });
 };

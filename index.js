@@ -57,7 +57,7 @@ app.post('/signup', function(request, response) {
 
 app.post('/upload', upload.any(), function(request, response) {
     console.log('Received file ' + JSON.stringify(request.files));
-    submission(request.files);
+    submission(request.files, request.session.username);
     response.redirect('/');
 });
 

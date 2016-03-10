@@ -4,7 +4,7 @@ var queue = kue.createQueue({
 });
 
 queue.process('submission', function(job, done) {
-    console.log('Processing ' + job.data.originalname);
+    console.log('Processing ' + job.data.originalname + ' from ' + job.data.username);
     done(null, job.data.size);
 });
 

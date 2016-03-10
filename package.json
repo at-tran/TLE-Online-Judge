@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "MONGOLAB_URI=mongodb://heroku_4rz2qrxb:7vl3vte4t70qeejo78mnbpov1j@ds047335.mongolab.com:47335/heroku_4rz2qrxb REDIS_URL=redis://h:pau3hvbib21sfffravnko60ohl@ec2-107-22-213-247.compute-1.amazonaws.com:12999 node index.js"
+    "web": "MONGOLAB_URI=mongodb://heroku_4rz2qrxb:7vl3vte4t70qeejo78mnbpov1j@ds047335.mongolab.com:47335/heroku_4rz2qrxb REDIS_URL=redis://h:pau3hvbib21sfffravnko60ohl@ec2-107-22-213-247.compute-1.amazonaws.com:12999 node index.js",
+    "worker": "MONGOLAB_URI=mongodb://heroku_4rz2qrxb:7vl3vte4t70qeejo78mnbpov1j@ds047335.mongolab.com:47335/heroku_4rz2qrxb REDIS_URL=redis://h:pau3hvbib21sfffravnko60ohl@ec2-107-22-213-247.compute-1.amazonaws.com:12999 node worker.js"
   },
   "repository": {
     "type": "git",
