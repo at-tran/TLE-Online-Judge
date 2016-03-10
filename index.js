@@ -10,7 +10,8 @@ var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
 var multer = require('multer');
 var upload = multer({dest: './uploads'});
-var MongoStore = require('connect-redis')(session);
+var RedisStore = require('connect-redis')(session);
+var submission= require('./bin/submission.js');
 
 app.use(session({
     secret: randString(10),
@@ -56,6 +57,7 @@ app.post('/signup', function(request, response) {
 
 app.post('/upload', upload.any(), function(request, response) {
     console.log('Received file ' + JSON.stringify(request.files));
+    submission(request.files);
     response.redirect('/');
 });
 

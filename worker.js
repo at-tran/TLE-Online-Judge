@@ -4,8 +4,8 @@ var queue = kue.createQueue({
 });
 
 queue.process('submission', function(job, done) {
-    console.log(job);
-    done(null, 1);
+    console.log('Processing ' + job.data.originalname);
+    done(null, job.data.size);
 });
 
 queue.watchStuckJobs(10000);
