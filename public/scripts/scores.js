@@ -54,25 +54,40 @@
 	var DropzoneDemo = React.createClass({
 	    displayName: 'DropzoneDemo',
 
-	    onDrop: function onDrop(files) {
-	        var data = new FormData();
-	        $.each(files, function (key, value) {
-	            data.append(key, value);
-	        });
-	        console.log(files);
-	        console.log(data);
+	    getInitialState: function getInitialState() {
+	        return { contents: [] };
+	    },
 
-	        $.ajax('upload', {
-	            type: 'POST',
-	            data: data,
-	            cache: false,
-	            dataType: 'json',
-	            processData: false,
-	            contentType: false,
-	            success: function success() {
-	                console.log('SUCCESS!');
-	            }
+	    onDrop: function onDrop(files) {
+	        // $.each(files, function(key, value) {
+	        //     console.log(value);
+	        // })
+	        var fileReader = new FileReader();
+	        fileReader.onload = function (e) {
+	            console.log(e.target.result);
+	            this.setState({
+	                contents: this.state.contents.concat(e.target.result)
+	            });
+	        }.bind(this);
+	        files.forEach(function (file) {
+	            fileReader.readAsText(file);
 	        });
+	        // var data = new FormData();
+	        // $.each(files, function(key, value) {
+	        //     data.append(key, value);
+	        // });
+
+	        // $.ajax('upload', {
+	        //     type: 'POST',
+	        //     data: data,
+	        //     cache: false,
+	        //     dataType: 'json',
+	        //     processData: false,
+	        //     contentType: false,
+	        //     success: function() {
+	        //         console.log('SUCCESS!');
+	        //     }
+	        // });
 	    },
 
 	    render: function render() {
@@ -87,7 +102,35 @@
 	                    null,
 	                    'Upload'
 	                )
-	            )
+	            ),
+	            React.createElement(FileContentList, { contents: this.state.contents })
+	        );
+	    }
+	});
+
+	var FileContent = React.createClass({
+	    displayName: 'FileContent',
+
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            { style: { whiteSpace: "pre-wrap" } },
+	            this.props.data
+	        );
+	    }
+	});
+
+	var FileContentList = React.createClass({
+	    displayName: 'FileContentList',
+
+	    render: function render() {
+	        var contents = this.props.contents.map(function (content, index) {
+	            return React.createElement(FileContent, { data: content, key: index });
+	        });
+	        return React.createElement(
+	            'div',
+	            null,
+	            contents
 	        );
 	    }
 	});

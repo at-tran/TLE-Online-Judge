@@ -4,25 +4,38 @@ var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
 
 var DropzoneDemo = React.createClass({
-    onDrop: function(files) {
-        var data = new FormData();
-        $.each(files, function(key, value) {
-            data.append(key, value);
-        });
-        console.log(files);
-        console.log(data);
+    getInitialState: function() {
+        return {contents: []};
+    },
 
-        $.ajax('upload', {
-            type: 'POST',
-            data: data,
-            cache: false,
-            dataType: 'json',
-            processData: false,
-            contentType: false,
-            success: function() {
-                console.log('SUCCESS!');
-            }
-        });
+    onDrop: function(files) {
+        // $.each(files, function(key, value) {
+        //     console.log(value);
+        // })
+        var fileReader = new FileReader();
+        fileReader.onload = function(e) {
+            console.log(e.target.result);
+            this.setState({
+                contents: this.state.contents.concat(e.target.result)
+            });
+        }.bind(this);
+        files.forEach(function(file) {fileReader.readAsText(file)});
+        // var data = new FormData();
+        // $.each(files, function(key, value) {
+        //     data.append(key, value);
+        // });
+
+        // $.ajax('upload', {
+        //     type: 'POST',
+        //     data: data,
+        //     cache: false,
+        //     dataType: 'json',
+        //     processData: false,
+        //     contentType: false,
+        //     success: function() {
+        //         console.log('SUCCESS!');
+        //     }
+        // });
     },
 
     render: function() {
@@ -31,9 +44,33 @@ var DropzoneDemo = React.createClass({
                 <Dropzone onDrop={this.onDrop}>
                     <div>Upload</div>
                 </Dropzone>
+                <FileContentList contents={this.state.contents} />
             </div>
         )
     }
 });
+
+var FileContent = React.createClass({
+    render: function() {
+        return (
+            <div style={{whiteSpace: "pre-wrap"}}>
+                {this.props.data}
+            </div>
+        )
+    }
+})
+
+var FileContentList = React.createClass({
+    render: function() {
+        var contents = this.props.contents.map(function(content, index) {
+            return <FileContent data={content} key={index} />;
+        })
+        return (
+            <div>
+                {contents}
+            </div>
+        )
+    }
+})
 
 ReactDOM.render(<DropzoneDemo />, document.getElementById('content'));
