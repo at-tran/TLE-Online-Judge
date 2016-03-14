@@ -1,0 +1,28 @@
+var child = require('child_process');
+
+module.exports = {
+	doCompile: function(source, output) {
+		console.log('Compiling..');
+		var compile = child.exec('g++ ' + source, function(error, _out, _err) {
+			if(error !== null) output(_err);
+			else output(null);
+		});
+	},
+	doRun: function(stdin, timeout, output){
+		console.log('Executing..');
+		var date = new Date();
+		var timeOut, _time = date.getTime();
+		var run = child.exec('echo ' + stdin + '|./a.out', function(err, out, _err){
+			var date = new Date();
+			var time = date.getTime() - _time;
+			clearTimeout(timeOut);
+			output(err, out, _err, time);
+		});
+		timeOut = setTimeout(function () {
+			child.exec('kill -9 $(pgrep a.out)');
+			var date = new Date();
+			var time = date.getTime() - _time;
+			output('timeout', '', 'Time limit exceeded', time);
+		}, timeout);
+	}
+}
