@@ -8,8 +8,8 @@ var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
 var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
-var multer = require('multer');
-var upload = multer({dest: './uploads'});
+// var multer = require('multer');
+// var upload = multer({dest: './uploads'});
 var RedisStore = require('connect-redis')(session);
 var submission= require('./bin/submission.js');
 
@@ -55,10 +55,10 @@ app.post('/signup', function(request, response) {
     })
 });
 
-app.post('/upload', upload.any(), function(request, response) {
-    console.log('Received file ' + JSON.stringify(request.files));
-    submission(request.files, request.session.username);
-    response.redirect('/');
+app.post('/upload', function(request, response) {
+    console.log(request.body);
+    submission(request.body, request.session.username);
+    response.end();
 });
 
 app.use(express.static('public'));

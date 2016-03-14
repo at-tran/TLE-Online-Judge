@@ -3,10 +3,10 @@ var queue = kue.createQueue({
     redis: process.env.REDIS_URL
 });
 
-function queueSubmission(file) {
-    queue.create('submission', file).on('complete', function(result) {
-        console.log('Processed file ' + file.originalname);
-        console.log('Result: ' + result);
+function queueSubmission(submission) {
+    queue.create('submission', submission).on('complete', function(result) {
+        console.log('Processed submission ' + submission.filename + ' from ' + submission.username)
+        console.log('Size of file is ' + result)
     }).removeOnComplete(true).save();
 }
 

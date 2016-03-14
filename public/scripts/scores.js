@@ -51,43 +51,27 @@
 	var ReactDOM = __webpack_require__(159);
 	var Dropzone = __webpack_require__(160);
 
-	var DropzoneDemo = React.createClass({
-	    displayName: 'DropzoneDemo',
+	var UploadBox = React.createClass({
+	    displayName: 'UploadBox',
 
 	    getInitialState: function getInitialState() {
 	        return { contents: [] };
 	    },
 
 	    onDrop: function onDrop(files) {
-	        // $.each(files, function(key, value) {
-	        //     console.log(value);
-	        // })
-	        var fileReader = new FileReader();
-	        fileReader.onload = function (e) {
-	            console.log(e.target.result);
-	            this.setState({
-	                contents: this.state.contents.concat(e.target.result)
-	            });
-	        }.bind(this);
 	        files.forEach(function (file) {
+	            var fileReader = new FileReader();
+	            fileReader.onload = function (e) {
+	                this.setState({
+	                    contents: this.state.contents.concat({
+	                        filename: file.name,
+	                        content: e.target.result,
+	                        size: file.size
+	                    })
+	                });
+	            }.bind(this);
 	            fileReader.readAsText(file);
-	        });
-	        // var data = new FormData();
-	        // $.each(files, function(key, value) {
-	        //     data.append(key, value);
-	        // });
-
-	        // $.ajax('upload', {
-	        //     type: 'POST',
-	        //     data: data,
-	        //     cache: false,
-	        //     dataType: 'json',
-	        //     processData: false,
-	        //     contentType: false,
-	        //     success: function() {
-	        //         console.log('SUCCESS!');
-	        //     }
-	        // });
+	        }.bind(this));
 	    },
 
 	    render: function render() {
@@ -103,7 +87,8 @@
 	                    'Upload'
 	                )
 	            ),
-	            React.createElement(FileContentList, { contents: this.state.contents })
+	            React.createElement(FileContentList, { contents: this.state.contents }),
+	            React.createElement(SubmitButton, { contents: this.state.contents })
 	        );
 	    }
 	});
@@ -115,7 +100,10 @@
 	        return React.createElement(
 	            'div',
 	            { style: { whiteSpace: "pre-wrap" } },
-	            this.props.data
+	            this.props.data.filename,
+	            ' ',
+	            React.createElement('br', null),
+	            this.props.data.content
 	        );
 	    }
 	});
@@ -135,7 +123,31 @@
 	    }
 	});
 
-	ReactDOM.render(React.createElement(DropzoneDemo, null), document.getElementById('content'));
+	var SubmitButton = React.createClass({
+	    displayName: 'SubmitButton',
+
+	    handleSubmit: function handleSubmit() {
+	        $.ajax('upload', {
+	            type: 'POST',
+	            dataType: 'json',
+	            contentType: 'application/json; charset=UTF-8',
+	            data: JSON.stringify(this.props.contents),
+	            success: function success() {
+	                console.log('SUCCESS!');
+	            }
+	        });
+	    },
+
+	    render: function render() {
+	        return React.createElement(
+	            'button',
+	            { onClick: this.handleSubmit },
+	            'Upload'
+	        );
+	    }
+	});
+
+	ReactDOM.render(React.createElement(UploadBox, null), document.getElementById('content'));
 
 /***/ },
 /* 1 */

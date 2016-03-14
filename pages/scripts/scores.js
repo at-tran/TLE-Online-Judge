@@ -3,39 +3,25 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
 
-var DropzoneDemo = React.createClass({
+var UploadBox = React.createClass({
     getInitialState: function() {
         return {contents: []};
     },
 
     onDrop: function(files) {
-        // $.each(files, function(key, value) {
-        //     console.log(value);
-        // })
-        var fileReader = new FileReader();
-        fileReader.onload = function(e) {
-            console.log(e.target.result);
-            this.setState({
-                contents: this.state.contents.concat(e.target.result)
-            });
-        }.bind(this);
-        files.forEach(function(file) {fileReader.readAsText(file)});
-        // var data = new FormData();
-        // $.each(files, function(key, value) {
-        //     data.append(key, value);
-        // });
-
-        // $.ajax('upload', {
-        //     type: 'POST',
-        //     data: data,
-        //     cache: false,
-        //     dataType: 'json',
-        //     processData: false,
-        //     contentType: false,
-        //     success: function() {
-        //         console.log('SUCCESS!');
-        //     }
-        // });
+        files.forEach(function(file) {
+            var fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                this.setState({
+                    contents: this.state.contents.concat({
+                        filename: file.name,
+                        content: e.target.result,
+                        size: file.size
+                    })
+                });
+            }.bind(this);
+            fileReader.readAsText(file);
+        }.bind(this));
     },
 
     render: function() {
@@ -45,6 +31,7 @@ var DropzoneDemo = React.createClass({
                     <div>Upload</div>
                 </Dropzone>
                 <FileContentList contents={this.state.contents} />
+                <SubmitButton contents={this.state.contents} />
             </div>
         )
     }
@@ -54,7 +41,8 @@ var FileContent = React.createClass({
     render: function() {
         return (
             <div style={{whiteSpace: "pre-wrap"}}>
-                {this.props.data}
+                {this.props.data.filename} <br/>
+                {this.props.data.content}
             </div>
         )
     }
@@ -73,4 +61,26 @@ var FileContentList = React.createClass({
     }
 })
 
-ReactDOM.render(<DropzoneDemo />, document.getElementById('content'));
+var SubmitButton = React.createClass({
+    handleSubmit: function() {
+        $.ajax('upload', {
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json; charset=UTF-8',
+            data: JSON.stringify(this.props.contents),
+            success: function() {
+                console.log('SUCCESS!');
+            }
+        });
+    },
+
+    render: function() {
+        return (
+            <button onClick={this.handleSubmit}>
+                Upload
+            </button>
+        )
+    }
+})
+
+ReactDOM.render(<UploadBox />, document.getElementById('content'));
