@@ -19,7 +19,7 @@ An Online Judge for Computer Science teachers and students
 - Project files :white_check_mark:
 - Login system :white_check_mark:
 - Judge
-- Submit files
-- Web workers
+- Submit files :white_check_mark:
+- Web worker :white_check_mark:
 - User information
 - Results
