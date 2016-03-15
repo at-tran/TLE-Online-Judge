@@ -4,7 +4,9 @@
   "description": "An Online Judge for Computer Science teachers and students",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "web": "MONGOLAB_URI=mongodb://heroku_4rz2qrxb:7vl3vte4t70qeejo78mnbpov1j@ds047335.mongolab.com:47335/heroku_4rz2qrxb REDIS_URL=redis://h:pau3hvbib21sfffravnko60ohl@ec2-107-22-213-247.compute-1.amazonaws.com:12999 node index.js",
+    "worker": "MONGOLAB_URI=mongodb://heroku_4rz2qrxb:7vl3vte4t70qeejo78mnbpov1j@ds047335.mongolab.com:47335/heroku_4rz2qrxb REDIS_URL=redis://h:pau3hvbib21sfffravnko60ohl@ec2-107-22-213-247.compute-1.amazonaws.com:12999 node worker.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +29,21 @@
   },
   "homepage": "https://github.com/TashaGospel/TLE-Online-Judge#readme",
   "dependencies": {
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-react": "^6.5.0",
     "body-parser": "^1.15.0",
+    "connect-redis": "^3.0.2",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
-    "mongodb": "^2.1.7"
+    "jquery": "^2.2.1",
+    "kue": "^0.10.5",
+    "mongodb": "^2.1.7",
+    "multer": "^1.1.0",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "react-dropzone": "^3.3.2"
   }
 }

@@ -8,12 +8,17 @@ var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
 var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
+// var multer = require('multer');
+// var upload = multer({dest: './uploads'});
+var RedisStore = require('connect-redis')(session);
+var submission= require('./bin/submission.js');
 
 app.use(session({
     secret: randString(10),
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
-    resave: false
+    resave: false,
+    store: new RedisStore({url: process.env.REDIS_URL})
 }));
 
 app.use(bodyParser.json());
@@ -37,10 +42,10 @@ app.get('/:file', function(request, response, next) {
 });
 
 app.post('/login', function(request, response) {
-   login(request, response, function(err) {
-       if (!err) response.redirect('/');
-       else response.redirect('/error.html');
-   })
+    login(request, response, function(err) {
+        if (!err) response.redirect('/');
+        else response.redirect('/error.html');
+    })
 });
 
 app.post('/signup', function(request, response) {
@@ -48,6 +53,12 @@ app.post('/signup', function(request, response) {
         if (!err) response.redirect('/login.html');
         else response.redirect('/error.html');
     })
+});
+
+app.post('/upload', function(request, response) {
+    console.log(request.body);
+    submission(request.body, request.session.username);
+    response.end();
 });
 
 app.use(express.static('public'));

@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/vim,node,webstorm,linux,windows,sublimetext
 
+### Custom ###
+.env
+
+
 ### Vim ###
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
@@ -15,6 +19,7 @@ Session.vim
 logs
 *.log
 npm-debug.log*
+uploads
 .env
 
 # Runtime data
