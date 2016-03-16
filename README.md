@@ -1,19 +1,25 @@
 # TLE Online Judge
-An Online Judge for Computer Science teachers and students  
+An Online Judge for Computer Science teachers and students
 
 ## Technologies
 ### Frontend
-- React  
-- React-Bootstrap  
+- React
+- React-Bootstrap
+- Jquery
+- Jade
+- Webpack
+- Babel
 
 ### Server
-- Nodejs  
-- Express  
-- Webpack  
+- Nodejs
+- Express
+- Kue
+- Express-session
 
 ### Backend
-- MongoDB  
-- Self-implemented Online Judge  
+- MongoDB
+- Redis
+- Self-implemented Online Judge
 
 ## Project TODOs
 - Project files :white_check_mark:
@@ -23,3 +29,11 @@ An Online Judge for Computer Science teachers and students
 - Web worker :white_check_mark:
 - User information
 - Results
+
+## Hosting
+This project is hosted by Heroku: <https://tle-online-judge.herokuapp.com/>
+
+## Contributors
+- Nguyen Phuc Khang <https://github.com/TimeLimitExceed>
+- Bui Phan Tho <https://github.com/BuiPhanTho>
+- Tran Anh Tuan <https://github.com/TashaGospel>

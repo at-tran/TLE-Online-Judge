@@ -1,11 +1,47 @@
 var $ = require('jquery');
+window.jQuery = $;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
+require('bootstrap');
+var Modal = require('react-bootstrap/lib/Modal');
+var Button = require('react-bootstrap/lib/Button');
 
-var UploadBox = React.createClass({
+var FileContent = React.createClass({
+    render: function() {
+        return (
+            <div style={{whiteSpace: "pre-wrap"}}>
+                {this.props.data.filename} <br/>
+                {this.props.data.content}
+            </div>
+        );
+    }
+})
+
+var FileContentList = React.createClass({
+    render: function() {
+        var contents = this.props.contents.map(function(content, index) {
+            return <FileContent data={content} key={index} />;
+        });
+        return (
+            <div>
+                {contents}
+            </div>
+        );
+    }
+})
+
+var UploadModal = React.createClass({
     getInitialState: function() {
-        return {contents: []};
+        return {contents: [], show: false};
+    },
+
+    showModal: function() {
+        this.setState({show: true});
+    },
+
+    hideModal: function() {
+        this.setState({show: false});
     },
 
     onDrop: function(files) {
@@ -24,63 +60,56 @@ var UploadBox = React.createClass({
         }.bind(this));
     },
 
-    render: function() {
-        return (
-            <div>
-                <Dropzone onDrop={this.onDrop}>
-                    <div>Upload</div>
-                </Dropzone>
-                <FileContentList contents={this.state.contents} />
-                <SubmitButton contents={this.state.contents} />
-            </div>
-        )
-    }
-});
-
-var FileContent = React.createClass({
-    render: function() {
-        return (
-            <div style={{whiteSpace: "pre-wrap"}}>
-                {this.props.data.filename} <br/>
-                {this.props.data.content}
-            </div>
-        )
-    }
-})
-
-var FileContentList = React.createClass({
-    render: function() {
-        var contents = this.props.contents.map(function(content, index) {
-            return <FileContent data={content} key={index} />;
-        })
-        return (
-            <div>
-                {contents}
-            </div>
-        )
-    }
-})
-
-var SubmitButton = React.createClass({
     handleSubmit: function() {
         $.ajax('upload', {
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json; charset=UTF-8',
-            data: JSON.stringify(this.props.contents),
+            data: JSON.stringify(this.state.contents),
             success: function() {
                 console.log('SUCCESS!');
             }
         });
+        this.hideModal();
+        setTimeout(function() {this.setState({contents: []})}.bind(this), 500);
     },
 
     render: function() {
         return (
-            <button onClick={this.handleSubmit}>
-                Upload
-            </button>
-        )
+            <Modal show={this.state.show} onHide={this.hideModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Upload submission</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Dropzone onDrop={this.onDrop}>
+                        <div>Upload</div>
+                    </Dropzone>
+                    <FileContentList contents={this.state.contents} />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={this.handleSubmit}>
+                        Submit
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        );
+    }
+});
+
+var myUploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
+
+var UploadModalButton = React.createClass({
+    handleClick: function() {
+        myUploadModal.showModal();
+    },
+
+    render: function() {
+        return (
+            <Button bsStyle="primary" bsSize="large" onClick={this.handleClick}>
+                Upload Submission
+            </Button>
+        );
     }
 })
 
-ReactDOM.render(<UploadBox />, document.getElementById('content'));
+ReactDOM.render(<UploadModalButton />, document.getElementById('UploadModalButton'));
