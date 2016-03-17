@@ -6,23 +6,33 @@ var Dropzone = require('react-dropzone');
 require('bootstrap');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
+var AceEditor = require('react-ace');
+require('brace/mode/pascal');
+require('brace/theme/monokai');
 
 var FileContent = React.createClass({
     render: function() {
         return (
-            <div style={{whiteSpace: "pre-wrap"}}>
+            <div>
                 {this.props.data.filename} <br/>
-                {this.props.data.content}
+                <AceEditor
+                    mode="pascal"
+                    theme="monokai"
+                    value={this.props.data.content}
+                    onChange={this.props.onChange}
+                    name={this.props.index.toString()}
+                    editorProps={{$blockScrolling: Infinity}}
+                />
             </div>
         );
     }
-})
+});
 
 var FileContentList = React.createClass({
     render: function() {
         var contents = this.props.contents.map(function(content, index) {
-            return <FileContent data={content} key={index} />;
-        });
+            return <FileContent data={content} key={index} index={index} onChange={this.props.onChange(index)}/>;
+        }.bind(this));
         return (
             <div>
                 {contents}
@@ -42,6 +52,15 @@ var UploadModal = React.createClass({
 
     hideModal: function() {
         this.setState({show: false});
+    },
+
+    onChange: function(index) {
+        console.log(this.state);
+        return function(newValue) {
+            var newContents = this.state.contents;
+            newContents[index].content = newValue;
+            this.setState({contents: newContents});
+        }.bind(this);
     },
 
     onDrop: function(files) {
@@ -84,7 +103,7 @@ var UploadModal = React.createClass({
                     <Dropzone onDrop={this.onDrop}>
                         <div>Upload</div>
                     </Dropzone>
-                    <FileContentList contents={this.state.contents} />
+                    <FileContentList contents={this.state.contents} onChange={this.onChange}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={this.handleSubmit}>
