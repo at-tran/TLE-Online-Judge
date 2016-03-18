@@ -1,5 +1,5 @@
 var $ = require('jquery');
-window.jQuery = $;
+window.$ = window.jQuery = $;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
@@ -65,7 +65,7 @@ var UploadModal = React.createClass({
         console.log(index);
         return function(newValue) {
             var newContents = this.state.contents;
-            newContents[index].content = newValue.target.value;
+            newContents[index].content = newValue;
             this.setState({contents: newContents});
         }.bind(this);
     },
