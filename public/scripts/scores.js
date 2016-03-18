@@ -54,12 +54,17 @@
 	__webpack_require__(162);
 	var Modal = __webpack_require__(175);
 	var Button = __webpack_require__(289);
+	var Input = __webpack_require__(296);
 	var AceEditor = __webpack_require__(290);
 	__webpack_require__(294);
 	__webpack_require__(295);
 
 	var FileContent = React.createClass({
 	    displayName: 'FileContent',
+
+	    shouldComponentUpdate: function shouldComponentUpdate() {
+	        return false;
+	    },
 
 	    render: function render() {
 	        return React.createElement(
@@ -68,6 +73,11 @@
 	            this.props.data.filename,
 	            ' ',
 	            React.createElement('br', null),
+	            React.createElement(
+	                Button,
+	                { onClick: this.props.onClick },
+	                'Remove'
+	            ),
 	            React.createElement(AceEditor, {
 	                mode: 'pascal',
 	                theme: 'monokai',
@@ -85,7 +95,7 @@
 
 	    render: function render() {
 	        var contents = this.props.contents.map(function (content, index) {
-	            return React.createElement(FileContent, { data: content, key: index, index: index, onChange: this.props.onChange(index) });
+	            return React.createElement(FileContent, { data: content, key: index, index: index, onChange: this.props.onChange(index), onClick: this.props.onClick(index) });
 	        }.bind(this));
 	        return React.createElement(
 	            'div',
@@ -112,9 +122,18 @@
 
 	    onChange: function onChange(index) {
 	        console.log(this.state);
+	        console.log(index);
 	        return function (newValue) {
 	            var newContents = this.state.contents;
-	            newContents[index].content = newValue;
+	            newContents[index].content = newValue.target.value;
+	            this.setState({ contents: newContents });
+	        }.bind(this);
+	    },
+
+	    onClick: function onClick(index) {
+	        return function () {
+	            var newContents = this.state.contents;
+	            newContents[index] = null;
 	            this.setState({ contents: newContents });
 	        }.bind(this);
 	    },
@@ -176,7 +195,7 @@
 	                        'Upload'
 	                    )
 	                ),
-	                React.createElement(FileContentList, { contents: this.state.contents, onChange: this.onChange })
+	                React.createElement(FileContentList, { contents: this.state.contents, onChange: this.onChange, onClick: this.onClick })
 	            ),
 	            React.createElement(
 	                Modal.Footer,
@@ -56718,6 +56737,730 @@
 	dom.importCssString(exports.cssText, exports.cssClass);
 	});
 
+
+/***/ },
+/* 296 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _inherits = __webpack_require__(217)['default'];
+
+	var _classCallCheck = __webpack_require__(224)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	var _interopRequireWildcard = __webpack_require__(297)['default'];
+
+	exports.__esModule = true;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _InputBase2 = __webpack_require__(298);
+
+	var _InputBase3 = _interopRequireDefault(_InputBase2);
+
+	var _FormControls = __webpack_require__(301);
+
+	var FormControls = _interopRequireWildcard(_FormControls);
+
+	var _utilsDeprecationWarning = __webpack_require__(305);
+
+	var _utilsDeprecationWarning2 = _interopRequireDefault(_utilsDeprecationWarning);
+
+	var Input = (function (_InputBase) {
+	  _inherits(Input, _InputBase);
+
+	  function Input() {
+	    _classCallCheck(this, Input);
+
+	    _InputBase.apply(this, arguments);
+	  }
+
+	  Input.prototype.render = function render() {
+	    if (this.props.type === 'static') {
+	      _utilsDeprecationWarning2['default']('Input type=static', 'FormControls.Static');
+	      return _react2['default'].createElement(FormControls.Static, this.props);
+	    }
+
+	    return _InputBase.prototype.render.call(this);
+	  };
+
+	  return Input;
+	})(_InputBase3['default']);
+
+	Input.propTypes = {
+	  type: _react2['default'].PropTypes.string
+	};
+
+	exports['default'] = Input;
+	module.exports = exports['default'];
+
+/***/ },
+/* 297 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	exports["default"] = function (obj) {
+	  if (obj && obj.__esModule) {
+	    return obj;
+	  } else {
+	    var newObj = {};
+
+	    if (obj != null) {
+	      for (var key in obj) {
+	        if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key];
+	      }
+	    }
+
+	    newObj["default"] = obj;
+	    return newObj;
+	  }
+	};
+
+	exports.__esModule = true;
+
+/***/ },
+/* 298 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _inherits = __webpack_require__(217)['default'];
+
+	var _classCallCheck = __webpack_require__(224)['default'];
+
+	var _extends = __webpack_require__(176)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _classnames = __webpack_require__(198);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _FormGroup = __webpack_require__(299);
+
+	var _FormGroup2 = _interopRequireDefault(_FormGroup);
+
+	var _Glyphicon = __webpack_require__(300);
+
+	var _Glyphicon2 = _interopRequireDefault(_Glyphicon);
+
+	var InputBase = (function (_React$Component) {
+	  _inherits(InputBase, _React$Component);
+
+	  function InputBase() {
+	    _classCallCheck(this, InputBase);
+
+	    _React$Component.apply(this, arguments);
+	  }
+
+	  InputBase.prototype.getInputDOMNode = function getInputDOMNode() {
+	    return this.refs.input;
+	  };
+
+	  InputBase.prototype.getValue = function getValue() {
+	    if (this.props.type === 'static') {
+	      return this.props.value;
+	    } else if (this.props.type) {
+	      if (this.props.type === 'select' && this.props.multiple) {
+	        return this.getSelectedOptions();
+	      }
+	      return this.getInputDOMNode().value;
+	    }
+	    throw new Error('Cannot use getValue without specifying input type.');
+	  };
+
+	  InputBase.prototype.getChecked = function getChecked() {
+	    return this.getInputDOMNode().checked;
+	  };
+
+	  InputBase.prototype.getSelectedOptions = function getSelectedOptions() {
+	    var values = [];
+
+	    Array.prototype.forEach.call(this.getInputDOMNode().getElementsByTagName('option'), function (option) {
+	      if (option.selected) {
+	        var value = option.getAttribute('value') || option.innerHtml;
+	        values.push(value);
+	      }
+	    });
+
+	    return values;
+	  };
+
+	  InputBase.prototype.isCheckboxOrRadio = function isCheckboxOrRadio() {
+	    return this.props.type === 'checkbox' || this.props.type === 'radio';
+	  };
+
+	  InputBase.prototype.isFile = function isFile() {
+	    return this.props.type === 'file';
+	  };
+
+	  InputBase.prototype.renderInputGroup = function renderInputGroup(children) {
+	    var addonBefore = this.props.addonBefore ? _react2['default'].createElement(
+	      'span',
+	      { className: 'input-group-addon', key: 'addonBefore' },
+	      this.props.addonBefore
+	    ) : null;
+
+	    var addonAfter = this.props.addonAfter ? _react2['default'].createElement(
+	      'span',
+	      { className: 'input-group-addon', key: 'addonAfter' },
+	      this.props.addonAfter
+	    ) : null;
+
+	    var buttonBefore = this.props.buttonBefore ? _react2['default'].createElement(
+	      'span',
+	      { className: 'input-group-btn' },
+	      this.props.buttonBefore
+	    ) : null;
+
+	    var buttonAfter = this.props.buttonAfter ? _react2['default'].createElement(
+	      'span',
+	      { className: 'input-group-btn' },
+	      this.props.buttonAfter
+	    ) : null;
+
+	    var inputGroupClassName = undefined;
+	    switch (this.props.bsSize) {
+	      case 'small':
+	        inputGroupClassName = 'input-group-sm';break;
+	      case 'large':
+	        inputGroupClassName = 'input-group-lg';break;
+	      default:
+	    }
+
+	    return addonBefore || addonAfter || buttonBefore || buttonAfter ? _react2['default'].createElement(
+	      'div',
+	      { className: _classnames2['default'](inputGroupClassName, 'input-group'), key: 'input-group' },
+	      addonBefore,
+	      buttonBefore,
+	      children,
+	      addonAfter,
+	      buttonAfter
+	    ) : children;
+	  };
+
+	  InputBase.prototype.renderIcon = function renderIcon() {
+	    if (this.props.hasFeedback) {
+	      if (this.props.feedbackIcon) {
+	        return _react2['default'].cloneElement(this.props.feedbackIcon, { formControlFeedback: true });
+	      }
+
+	      switch (this.props.bsStyle) {
+	        case 'success':
+	          return _react2['default'].createElement(_Glyphicon2['default'], { formControlFeedback: true, glyph: 'ok', key: 'icon' });
+	        case 'warning':
+	          return _react2['default'].createElement(_Glyphicon2['default'], { formControlFeedback: true, glyph: 'warning-sign', key: 'icon' });
+	        case 'error':
+	          return _react2['default'].createElement(_Glyphicon2['default'], { formControlFeedback: true, glyph: 'remove', key: 'icon' });
+	        default:
+	          return _react2['default'].createElement('span', { className: 'form-control-feedback', key: 'icon' });
+	      }
+	    } else {
+	      return null;
+	    }
+	  };
+
+	  InputBase.prototype.renderHelp = function renderHelp() {
+	    return this.props.help ? _react2['default'].createElement(
+	      'span',
+	      { className: 'help-block', key: 'help' },
+	      this.props.help
+	    ) : null;
+	  };
+
+	  InputBase.prototype.renderCheckboxAndRadioWrapper = function renderCheckboxAndRadioWrapper(children) {
+	    var classes = {
+	      'checkbox': this.props.type === 'checkbox',
+	      'radio': this.props.type === 'radio'
+	    };
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: _classnames2['default'](classes), key: 'checkboxRadioWrapper' },
+	      children
+	    );
+	  };
+
+	  InputBase.prototype.renderWrapper = function renderWrapper(children) {
+	    return this.props.wrapperClassName ? _react2['default'].createElement(
+	      'div',
+	      { className: this.props.wrapperClassName, key: 'wrapper' },
+	      children
+	    ) : children;
+	  };
+
+	  InputBase.prototype.renderLabel = function renderLabel(children) {
+	    var classes = {
+	      'control-label': !this.isCheckboxOrRadio()
+	    };
+	    classes[this.props.labelClassName] = this.props.labelClassName;
+
+	    return this.props.label ? _react2['default'].createElement(
+	      'label',
+	      { htmlFor: this.props.id, className: _classnames2['default'](classes), key: 'label' },
+	      children,
+	      this.props.label
+	    ) : children;
+	  };
+
+	  InputBase.prototype.renderInput = function renderInput() {
+	    if (!this.props.type) {
+	      return this.props.children;
+	    }
+
+	    switch (this.props.type) {
+	      case 'select':
+	        return _react2['default'].createElement(
+	          'select',
+	          _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'form-control'), ref: 'input', key: 'input' }),
+	          this.props.children
+	        );
+	      case 'textarea':
+	        return _react2['default'].createElement('textarea', _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'form-control'), ref: 'input', key: 'input' }));
+	      case 'static':
+	        return _react2['default'].createElement(
+	          'p',
+	          _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'form-control-static'), ref: 'input', key: 'input' }),
+	          this.props.value
+	        );
+	      default:
+	        var className = this.isCheckboxOrRadio() || this.isFile() ? '' : 'form-control';
+	        return _react2['default'].createElement('input', _extends({}, this.props, { className: _classnames2['default'](this.props.className, className), ref: 'input', key: 'input' }));
+	    }
+	  };
+
+	  InputBase.prototype.renderFormGroup = function renderFormGroup(children) {
+	    return _react2['default'].createElement(
+	      _FormGroup2['default'],
+	      this.props,
+	      children
+	    );
+	  };
+
+	  InputBase.prototype.renderChildren = function renderChildren() {
+	    return !this.isCheckboxOrRadio() ? [this.renderLabel(), this.renderWrapper([this.renderInputGroup(this.renderInput()), this.renderIcon(), this.renderHelp()])] : this.renderWrapper([this.renderCheckboxAndRadioWrapper(this.renderLabel(this.renderInput())), this.renderHelp()]);
+	  };
+
+	  InputBase.prototype.render = function render() {
+	    var children = this.renderChildren();
+	    return this.renderFormGroup(children);
+	  };
+
+	  return InputBase;
+	})(_react2['default'].Component);
+
+	InputBase.propTypes = {
+	  type: _react2['default'].PropTypes.string,
+	  label: _react2['default'].PropTypes.node,
+	  help: _react2['default'].PropTypes.node,
+	  addonBefore: _react2['default'].PropTypes.node,
+	  addonAfter: _react2['default'].PropTypes.node,
+	  buttonBefore: _react2['default'].PropTypes.node,
+	  buttonAfter: _react2['default'].PropTypes.node,
+	  bsSize: _react2['default'].PropTypes.oneOf(['small', 'medium', 'large']),
+	  bsStyle: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error']),
+	  hasFeedback: _react2['default'].PropTypes.bool,
+	  feedbackIcon: _react2['default'].PropTypes.node,
+	  id: _react2['default'].PropTypes.oneOfType([_react2['default'].PropTypes.string, _react2['default'].PropTypes.number]),
+	  groupClassName: _react2['default'].PropTypes.string,
+	  wrapperClassName: _react2['default'].PropTypes.string,
+	  labelClassName: _react2['default'].PropTypes.string,
+	  multiple: _react2['default'].PropTypes.bool,
+	  disabled: _react2['default'].PropTypes.bool,
+	  value: _react2['default'].PropTypes.any
+	};
+
+	InputBase.defaultProps = {
+	  disabled: false,
+	  hasFeedback: false,
+	  multiple: false
+	};
+
+	exports['default'] = InputBase;
+	module.exports = exports['default'];
+
+/***/ },
+/* 299 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _inherits = __webpack_require__(217)['default'];
+
+	var _classCallCheck = __webpack_require__(224)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(198);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var FormGroup = (function (_React$Component) {
+	  _inherits(FormGroup, _React$Component);
+
+	  function FormGroup() {
+	    _classCallCheck(this, FormGroup);
+
+	    _React$Component.apply(this, arguments);
+	  }
+
+	  FormGroup.prototype.render = function render() {
+	    var classes = {
+	      'form-group': !this.props.standalone,
+	      'form-group-lg': !this.props.standalone && this.props.bsSize === 'large',
+	      'form-group-sm': !this.props.standalone && this.props.bsSize === 'small',
+	      'has-feedback': this.props.hasFeedback,
+	      'has-success': this.props.bsStyle === 'success',
+	      'has-warning': this.props.bsStyle === 'warning',
+	      'has-error': this.props.bsStyle === 'error'
+	    };
+
+	    return _react2['default'].createElement(
+	      'div',
+	      { className: _classnames2['default'](classes, this.props.groupClassName) },
+	      this.props.children
+	    );
+	  };
+
+	  return FormGroup;
+	})(_react2['default'].Component);
+
+	FormGroup.defaultProps = {
+	  hasFeedback: false,
+	  standalone: false
+	};
+
+	FormGroup.propTypes = {
+	  standalone: _react2['default'].PropTypes.bool,
+	  hasFeedback: _react2['default'].PropTypes.bool,
+	  bsSize: function bsSize(props) {
+	    if (props.standalone && props.bsSize !== undefined) {
+	      return new Error('bsSize will not be used when `standalone` is set.');
+	    }
+
+	    return _react2['default'].PropTypes.oneOf(['small', 'medium', 'large']).apply(null, arguments);
+	  },
+	  bsStyle: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error']),
+	  groupClassName: _react2['default'].PropTypes.string
+	};
+
+	exports['default'] = FormGroup;
+	module.exports = exports['default'];
+
+/***/ },
+/* 300 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = __webpack_require__(176)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(198);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var Glyphicon = _react2['default'].createClass({
+	  displayName: 'Glyphicon',
+
+	  propTypes: {
+	    /**
+	     * bootstrap className
+	     * @private
+	     */
+	    bsClass: _react2['default'].PropTypes.string,
+	    /**
+	     * An icon name. See e.g. http://getbootstrap.com/components/#glyphicons
+	     */
+	    glyph: _react2['default'].PropTypes.string.isRequired,
+	    /**
+	     * Adds 'form-control-feedback' class
+	     * @private
+	     */
+	    formControlFeedback: _react2['default'].PropTypes.bool
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      bsClass: 'glyphicon',
+	      formControlFeedback: false
+	    };
+	  },
+
+	  render: function render() {
+	    var _classNames;
+
+	    var className = _classnames2['default'](this.props.className, (_classNames = {}, _classNames[this.props.bsClass] = true, _classNames['glyphicon-' + this.props.glyph] = true, _classNames['form-control-feedback'] = this.props.formControlFeedback, _classNames));
+
+	    return _react2['default'].createElement(
+	      'span',
+	      _extends({}, this.props, { className: className }),
+	      this.props.children
+	    );
+	  }
+	});
+
+	exports['default'] = Glyphicon;
+	module.exports = exports['default'];
+
+/***/ },
+/* 301 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _Static2 = __webpack_require__(302);
+
+	var _Static3 = _interopRequireDefault(_Static2);
+
+	exports.Static = _Static3['default'];
+
+/***/ },
+/* 302 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _inherits = __webpack_require__(217)['default'];
+
+	var _classCallCheck = __webpack_require__(224)['default'];
+
+	var _extends = __webpack_require__(176)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(198);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var _InputBase2 = __webpack_require__(298);
+
+	var _InputBase3 = _interopRequireDefault(_InputBase2);
+
+	var _utilsChildrenValueInputValidation = __webpack_require__(303);
+
+	var _utilsChildrenValueInputValidation2 = _interopRequireDefault(_utilsChildrenValueInputValidation);
+
+	var Static = (function (_InputBase) {
+	  _inherits(Static, _InputBase);
+
+	  function Static() {
+	    _classCallCheck(this, Static);
+
+	    _InputBase.apply(this, arguments);
+	  }
+
+	  Static.prototype.getValue = function getValue() {
+	    var _props = this.props;
+	    var children = _props.children;
+	    var value = _props.value;
+
+	    return children ? children : value;
+	  };
+
+	  Static.prototype.renderInput = function renderInput() {
+	    return _react2['default'].createElement(
+	      'p',
+	      _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'form-control-static'), ref: 'input', key: 'input' }),
+	      this.getValue()
+	    );
+	  };
+
+	  return Static;
+	})(_InputBase3['default']);
+
+	Static.propTypes = {
+	  value: _utilsChildrenValueInputValidation2['default'],
+	  children: _utilsChildrenValueInputValidation2['default']
+	};
+
+	exports['default'] = Static;
+	module.exports = exports['default'];
+
+/***/ },
+/* 303 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+	exports['default'] = valueValidation;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactPropTypesLibSinglePropFrom = __webpack_require__(304);
+
+	var _reactPropTypesLibSinglePropFrom2 = _interopRequireDefault(_reactPropTypesLibSinglePropFrom);
+
+	function valueValidation(props, propName, componentName) {
+	  var error = _reactPropTypesLibSinglePropFrom2['default']('children', 'value')(props, propName, componentName);
+
+	  if (!error) {
+	    error = _react2['default'].PropTypes.node(props, propName, componentName);
+	  }
+
+	  return error;
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 304 */
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if only one of the listed properties is in use. An error is given
+	 * if multiple have a value
+	 *
+	 * @param props
+	 * @param propName
+	 * @param componentName
+	 * @returns {Error|undefined}
+	 */
+	'use strict';
+
+	exports.__esModule = true;
+	exports['default'] = createSinglePropFromChecker;
+
+	function createSinglePropFromChecker() {
+	  for (var _len = arguments.length, arrOfProps = Array(_len), _key = 0; _key < _len; _key++) {
+	    arrOfProps[_key] = arguments[_key];
+	  }
+
+	  function validate(props, propName, componentName) {
+	    var usedPropCount = arrOfProps.map(function (listedProp) {
+	      return props[listedProp];
+	    }).reduce(function (acc, curr) {
+	      return acc + (curr !== undefined ? 1 : 0);
+	    }, 0);
+
+	    if (usedPropCount > 1) {
+	      var first = arrOfProps[0];
+	      var others = arrOfProps.slice(1);
+
+	      var message = others.join(', ') + ' and ' + first;
+	      return new Error('Invalid prop \'' + propName + '\', only one of the following ' + ('may be provided: ' + message));
+	    }
+	  }
+	  return validate;
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 305 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	var _inherits = __webpack_require__(217)['default'];
+
+	var _classCallCheck = __webpack_require__(224)['default'];
+
+	var _interopRequireDefault = __webpack_require__(197)['default'];
+
+	exports.__esModule = true;
+
+	var _warning = __webpack_require__(204);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var warned = {};
+
+	function deprecationWarning(oldname, newname, link) {
+	  var message = undefined;
+
+	  if (typeof oldname === 'object') {
+	    message = oldname.message;
+	  } else {
+	    message = oldname + ' is deprecated. Use ' + newname + ' instead.';
+
+	    if (link) {
+	      message += '\nYou can read more about it at ' + link;
+	    }
+	  }
+
+	  if (warned[message]) {
+	    return;
+	  }
+
+	  process.env.NODE_ENV !== 'production' ? _warning2['default'](false, message) : undefined;
+	  warned[message] = true;
+	}
+
+	deprecationWarning.wrapper = function (Component) {
+	  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    args[_key - 1] = arguments[_key];
+	  }
+
+	  return (function (_Component) {
+	    _inherits(DeprecatedComponent, _Component);
+
+	    function DeprecatedComponent() {
+	      _classCallCheck(this, DeprecatedComponent);
+
+	      _Component.apply(this, arguments);
+	    }
+
+	    DeprecatedComponent.prototype.componentWillMount = function componentWillMount() {
+	      deprecationWarning.apply(undefined, args);
+
+	      if (_Component.prototype.componentWillMount) {
+	        var _Component$prototype$componentWillMount;
+
+	        for (var _len2 = arguments.length, methodArgs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	          methodArgs[_key2] = arguments[_key2];
+	        }
+
+	        (_Component$prototype$componentWillMount = _Component.prototype.componentWillMount).call.apply(_Component$prototype$componentWillMount, [this].concat(methodArgs));
+	      }
+	    };
+
+	    return DeprecatedComponent;
+	  })(Component);
+	};
+
+	exports['default'] = deprecationWarning;
+	module.exports = exports['default'];
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }
 /******/ ]);
