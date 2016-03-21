@@ -52,186 +52,11 @@
 	var ReactDOM = __webpack_require__(159);
 	var Dropzone = __webpack_require__(160);
 	__webpack_require__(162);
-	var Modal = __webpack_require__(175);
-	var Button = __webpack_require__(289);
-	var Input = __webpack_require__(290);
-	var AceEditor = __webpack_require__(300);
-	__webpack_require__(304);
-	__webpack_require__(305);
 
-	var FileContent = React.createClass({
-	    displayName: 'FileContent',
-
-	    shouldComponentUpdate: function shouldComponentUpdate() {
-	        return false;
-	    },
-
-	    render: function render() {
-	        return React.createElement(
-	            'div',
-	            null,
-	            this.props.data.filename,
-	            ' ',
-	            React.createElement('br', null),
-	            React.createElement(
-	                Button,
-	                { onClick: this.props.onClick },
-	                'Remove'
-	            ),
-	            React.createElement(AceEditor, {
-	                mode: 'pascal',
-	                theme: 'monokai',
-	                value: this.props.data.content,
-	                onChange: this.props.onChange,
-	                name: this.props.index.toString(),
-	                editorProps: { $blockScrolling: Infinity }
-	            })
-	        );
-	    }
-	});
-
-	var FileContentList = React.createClass({
-	    displayName: 'FileContentList',
-
-	    render: function render() {
-	        var contents = this.props.contents.map(function (content, index) {
-	            return React.createElement(FileContent, { data: content, key: index, index: index, onChange: this.props.onChange(index), onClick: this.props.onClick(index) });
-	        }.bind(this));
-	        return React.createElement(
-	            'div',
-	            null,
-	            contents
-	        );
-	    }
-	});
-
-	var UploadModal = React.createClass({
-	    displayName: 'UploadModal',
-
-	    getInitialState: function getInitialState() {
-	        return { contents: [], show: false };
-	    },
-
-	    showModal: function showModal() {
-	        this.setState({ show: true });
-	    },
-
-	    hideModal: function hideModal() {
-	        this.setState({ show: false });
-	    },
-
-	    onChange: function onChange(index) {
-	        console.log(this.state);
-	        console.log(index);
-	        return function (newValue) {
-	            var newContents = this.state.contents;
-	            newContents[index].content = newValue;
-	            this.setState({ contents: newContents });
-	        }.bind(this);
-	    },
-
-	    onClick: function onClick(index) {
-	        return function () {
-	            var newContents = this.state.contents;
-	            newContents[index] = null;
-	            this.setState({ contents: newContents });
-	        }.bind(this);
-	    },
-
-	    onDrop: function onDrop(files) {
-	        files.forEach(function (file) {
-	            var fileReader = new FileReader();
-	            fileReader.onload = function (e) {
-	                this.setState({
-	                    contents: this.state.contents.concat({
-	                        filename: file.name,
-	                        content: e.target.result,
-	                        size: file.size
-	                    })
-	                });
-	            }.bind(this);
-	            fileReader.readAsText(file);
-	        }.bind(this));
-	    },
-
-	    handleSubmit: function handleSubmit() {
-	        $.ajax('upload', {
-	            type: 'POST',
-	            dataType: 'json',
-	            contentType: 'application/json; charset=UTF-8',
-	            data: JSON.stringify(this.state.contents),
-	            success: function success() {
-	                console.log('SUCCESS!');
-	            }
-	        });
-	        this.hideModal();
-	        setTimeout(function () {
-	            this.setState({ contents: [] });
-	        }.bind(this), 500);
-	    },
-
-	    render: function render() {
-	        return React.createElement(
-	            Modal,
-	            { show: this.state.show, onHide: this.hideModal },
-	            React.createElement(
-	                Modal.Header,
-	                { closeButton: true },
-	                React.createElement(
-	                    Modal.Title,
-	                    null,
-	                    'Upload submission'
-	                )
-	            ),
-	            React.createElement(
-	                Modal.Body,
-	                null,
-	                React.createElement(
-	                    Dropzone,
-	                    { onDrop: this.onDrop },
-	                    React.createElement(
-	                        'div',
-	                        null,
-	                        'Upload'
-	                    )
-	                ),
-	                React.createElement(FileContentList, { contents: this.state.contents, onChange: this.onChange, onClick: this.onClick })
-	            ),
-	            React.createElement(
-	                Modal.Footer,
-	                null,
-	                React.createElement(
-	                    Button,
-	                    { onClick: this.handleSubmit },
-	                    'Submit'
-	                )
-	            )
-	        );
-	    }
-	});
-
+	var UploadModal = __webpack_require__(307);
 	var myUploadModal = ReactDOM.render(React.createElement(UploadModal, null), document.getElementById('UploadModal'));
 
-	var UploadModalButton = React.createClass({
-	    displayName: 'UploadModalButton',
-
-	    handleClick: function handleClick() {
-	        myUploadModal.showModal();
-	    },
-
-	    render: function render() {
-	        return React.createElement(
-	            Button,
-	            { bsStyle: 'primary', bsSize: 'large', onClick: this.handleClick },
-	            'Upload Submission'
-	        );
-	    }
-	});
-
-	var a;
-
-	console.log(a);
-
+	var UploadModalButton = __webpack_require__(308)(myUploadModal);
 	ReactDOM.render(React.createElement(UploadModalButton, null), document.getElementById('UploadModalButton'));
 
 /***/ },
@@ -239,7 +64,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.1
+	 * jQuery JavaScript Library v2.2.2
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -249,7 +74,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-02-22T19:11Z
+	 * Date: 2016-03-17T17:51Z
 	 */
 
 	(function( global, factory ) {
@@ -305,7 +130,7 @@
 
 
 	var
-		version = "2.2.1",
+		version = "2.2.2",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -516,6 +341,7 @@
 		},
 
 		isPlainObject: function( obj ) {
+			var key;
 
 			// Not plain objects:
 			// - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -525,14 +351,18 @@
 				return false;
 			}
 
+			// Not own constructor property must be Object
 			if ( obj.constructor &&
-					!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+					!hasOwn.call( obj, "constructor" ) &&
+					!hasOwn.call( obj.constructor.prototype || {}, "isPrototypeOf" ) ) {
 				return false;
 			}
 
-			// If the function hasn't returned already, we're confident that
-			// |obj| is a plain object, created by {} or constructed with new Object
-			return true;
+			// Own properties are enumerated firstly, so to speed up,
+			// if last one is own, then all properties are own
+			for ( key in obj ) {}
+
+			return key === undefined || hasOwn.call( obj, key );
 		},
 
 		isEmptyObject: function( obj ) {
@@ -7565,6 +7395,12 @@
 		}
 	} );
 
+	// Support: IE <=11 only
+	// Accessing the selectedIndex property
+	// forces the browser to respect setting selected
+	// on the option
+	// The getter ensures a default option is selected
+	// when in an optgroup
 	if ( !support.optSelected ) {
 		jQuery.propHooks.selected = {
 			get: function( elem ) {
@@ -7573,6 +7409,16 @@
 					parent.parentNode.selectedIndex;
 				}
 				return null;
+			},
+			set: function( elem ) {
+				var parent = elem.parentNode;
+				if ( parent ) {
+					parent.selectedIndex;
+
+					if ( parent.parentNode ) {
+						parent.parentNode.selectedIndex;
+					}
+				}
 			}
 		};
 	}
@@ -7767,7 +7613,8 @@
 
 
 
-	var rreturn = /\r/g;
+	var rreturn = /\r/g,
+		rspaces = /[\x20\t\r\n\f]+/g;
 
 	jQuery.fn.extend( {
 		val: function( value ) {
@@ -7843,9 +7690,15 @@
 			option: {
 				get: function( elem ) {
 
-					// Support: IE<11
-					// option.value not trimmed (#14858)
-					return jQuery.trim( elem.value );
+					var val = jQuery.find.attr( elem, "value" );
+					return val != null ?
+						val :
+
+						// Support: IE10-11+
+						// option.text throws exceptions (#14686, #14858)
+						// Strip and collapse whitespace
+						// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+						jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 				}
 			},
 			select: {
@@ -7898,7 +7751,7 @@
 					while ( i-- ) {
 						option = options[ i ];
 						if ( option.selected =
-								jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
+							jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
 						) {
 							optionSet = true;
 						}
@@ -9593,18 +9446,6 @@
 
 
 
-	// Support: Safari 8+
-	// In Safari 8 documents created via document.implementation.createHTMLDocument
-	// collapse sibling forms: the second one becomes a child of the first one.
-	// Because of that, this security measure has to be disabled in Safari 8.
-	// https://bugs.webkit.org/show_bug.cgi?id=137337
-	support.createHTMLDocument = ( function() {
-		var body = document.implementation.createHTMLDocument( "" ).body;
-		body.innerHTML = "<form></form><form></form>";
-		return body.childNodes.length === 2;
-	} )();
-
-
 	// Argument "data" should be string of html
 	// context (optional): If specified, the fragment will be created in this context,
 	// defaults to document
@@ -9617,12 +9458,7 @@
 			keepScripts = context;
 			context = false;
 		}
-
-		// Stop scripts or inline event handlers from being executed immediately
-		// by using document.implementation
-		context = context || ( support.createHTMLDocument ?
-			document.implementation.createHTMLDocument( "" ) :
-			document );
+		context = context || document;
 
 		var parsed = rsingleTag.exec( data ),
 			scripts = !keepScripts && [];
@@ -57473,6 +57309,209 @@
 	dom.importCssString(exports.cssText, exports.cssClass);
 	});
 
+
+/***/ },
+/* 306 */,
+/* 307 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(1);
+	window.$ = window.jQuery = $;
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(159);
+	var Dropzone = __webpack_require__(160);
+	__webpack_require__(162);
+	var Modal = __webpack_require__(175);
+	var Button = __webpack_require__(289);
+	var Input = __webpack_require__(290);
+	var AceEditor = __webpack_require__(300);
+	__webpack_require__(304);
+	__webpack_require__(305);
+
+	var FileContent = React.createClass({
+	    displayName: 'FileContent',
+
+	    shouldComponentUpdate: function shouldComponentUpdate() {
+	        return false;
+	    },
+
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            null,
+	            this.props.data.filename,
+	            ' ',
+	            React.createElement('br', null),
+	            React.createElement(
+	                Button,
+	                { onClick: this.props.onClick },
+	                'Remove'
+	            ),
+	            React.createElement(AceEditor, {
+	                mode: 'pascal',
+	                theme: 'monokai',
+	                value: this.props.data.content,
+	                onChange: this.props.onChange,
+	                name: this.props.index.toString(),
+	                editorProps: { $blockScrolling: Infinity }
+	            })
+	        );
+	    }
+	});
+
+	var FileContentList = React.createClass({
+	    displayName: 'FileContentList',
+
+	    render: function render() {
+	        var contents = this.props.contents.map(function (content, index) {
+	            return React.createElement(FileContent, { data: content, key: index, index: index, onChange: this.props.onChange(index), onClick: this.props.onClick(index) });
+	        }.bind(this));
+	        return React.createElement(
+	            'div',
+	            null,
+	            contents
+	        );
+	    }
+	});
+
+	module.exports = React.createClass({
+	    displayName: 'exports',
+
+	    getInitialState: function getInitialState() {
+	        return { contents: [], show: false };
+	    },
+
+	    showModal: function showModal() {
+	        this.setState({ show: true });
+	    },
+
+	    hideModal: function hideModal() {
+	        this.setState({ show: false });
+	    },
+
+	    onChange: function onChange(index) {
+	        return function (newValue) {
+	            var newContents = this.state.contents;
+	            newContents[index].content = newValue;
+	            this.setState({ contents: newContents });
+	        }.bind(this);
+	    },
+
+	    onClick: function onClick(index) {
+	        return function () {
+	            var newContents = this.state.contents;
+	            newContents[index] = null;
+	            this.setState({ contents: newContents });
+	        }.bind(this);
+	    },
+
+	    onDrop: function onDrop(files) {
+	        files.forEach(function (file) {
+	            var fileReader = new FileReader();
+	            fileReader.onload = function (e) {
+	                this.setState({
+	                    contents: this.state.contents.concat({
+	                        filename: file.name,
+	                        content: e.target.result,
+	                        size: file.size
+	                    })
+	                });
+	            }.bind(this);
+	            fileReader.readAsText(file);
+	        }.bind(this));
+	    },
+
+	    handleSubmit: function handleSubmit() {
+	        $.ajax('upload', {
+	            type: 'POST',
+	            dataType: 'json',
+	            contentType: 'application/json; charset=UTF-8',
+	            data: JSON.stringify(this.state.contents),
+	            success: function success() {
+	                console.log('SUCCESS!');
+	            }
+	        });
+	        this.hideModal();
+	        setTimeout(function () {
+	            this.setState({ contents: [] });
+	        }.bind(this), 500);
+	    },
+
+	    render: function render() {
+	        return React.createElement(
+	            Modal,
+	            { show: this.state.show, onHide: this.hideModal },
+	            React.createElement(
+	                Modal.Header,
+	                { closeButton: true },
+	                React.createElement(
+	                    Modal.Title,
+	                    null,
+	                    'Upload submission'
+	                )
+	            ),
+	            React.createElement(
+	                Modal.Body,
+	                null,
+	                React.createElement(
+	                    Dropzone,
+	                    { onDrop: this.onDrop },
+	                    React.createElement(
+	                        'div',
+	                        null,
+	                        'Upload'
+	                    )
+	                ),
+	                React.createElement(FileContentList, { contents: this.state.contents, onChange: this.onChange, onClick: this.onClick })
+	            ),
+	            React.createElement(
+	                Modal.Footer,
+	                null,
+	                React.createElement(
+	                    Button,
+	                    { onClick: this.handleSubmit },
+	                    'Submit'
+	                )
+	            )
+	        );
+	    }
+	});
+
+/***/ },
+/* 308 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(1);
+	window.$ = window.jQuery = $;
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(159);
+	var Dropzone = __webpack_require__(160);
+	__webpack_require__(162);
+	var Modal = __webpack_require__(175);
+	var Button = __webpack_require__(289);
+	var Input = __webpack_require__(290);
+	var AceEditor = __webpack_require__(300);
+	__webpack_require__(304);
+	__webpack_require__(305);
+
+	module.exports = function (uploadModal) {
+	    return React.createClass({
+	        handleClick: function handleClick() {
+	            uploadModal.showModal();
+	        },
+	        render: function render() {
+	            return React.createElement(
+	                Button,
+	                { bsStyle: 'primary', bsSize: 'large', onClick: this.handleClick },
+	                'Upload Submission'
+	            );
+	        }
+	    });
+	};
 
 /***/ }
 /******/ ]);

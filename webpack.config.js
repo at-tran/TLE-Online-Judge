@@ -1,7 +1,6 @@
 module.exports = {
     entry: {
-        // home: './pages/scripts/home.js',
-        scores: './pages/scripts/scores.js'
+        app: './pages/scripts/app.js'
     },
     output: {
         path: './public/scripts',

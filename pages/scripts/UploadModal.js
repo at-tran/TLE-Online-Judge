@@ -47,7 +47,7 @@ var FileContentList = React.createClass({
     }
 })
 
-var UploadModal = React.createClass({
+module.exports = React.createClass({
     getInitialState: function() {
         return {contents: [], show: false};
     },
@@ -61,8 +61,6 @@ var UploadModal = React.createClass({
     },
 
     onChange: function(index) {
-        console.log(this.state);
-        console.log(index);
         return function(newValue) {
             var newContents = this.state.contents;
             newContents[index].content = newValue;
@@ -129,21 +127,3 @@ var UploadModal = React.createClass({
         );
     }
 });
-
-var myUploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
-
-var UploadModalButton = React.createClass({
-    handleClick: function() {
-        myUploadModal.showModal();
-    },
-
-    render: function() {
-        return (
-            <Button bsStyle="primary" bsSize="large" onClick={this.handleClick}>
-                Upload Submission
-            </Button>
-        );
-    }
-})
-
-ReactDOM.render(<UploadModalButton />, document.getElementById('UploadModalButton'));
