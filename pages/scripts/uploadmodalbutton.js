@@ -11,17 +11,17 @@ var AceEditor = require('react-ace');
 require('brace/mode/pascal');
 require('brace/theme/monokai');
 
-module.exports = function(uploadModal) {
-    return React.createClass({
-        handleClick: function() {
-            uploadModal.showModal();
-        },
-           render: function() {
-               return (
-                   <Button bsStyle="primary" bsSize="large" onClick={this.handleClick}>
-                   Upload Submission
-                   </Button>
-                   );
-           }
-    });
-};
+module.exports = React.createClass({
+    handleClick: function() {
+        this.props.uploadModal.showModal();
+    },
+
+    render: function() {
+        return (
+            <Button bsStyle="primary" bsSize="large" onClick={this.handleClick}>
+                Upload Submission
+            </Button>
+        );
+    }
+});
+

@@ -8,10 +8,8 @@ var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
 var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
-// var multer = require('multer');
-// var upload = multer({dest: './uploads'});
 var RedisStore = require('connect-redis')(session);
-var submission= require('./bin/submission.js');
+var submission = require('./bin/submission.js');
 
 app.use(session({
     secret: randString(10),
@@ -32,7 +30,7 @@ app.set('view engine', 'jade');
 // app.locals.pretty = true;
 
 app.get('/', function (request, response) {
-    response.redirect('/homepage.html');
+    response.redirect('/home.html');
 });
 
 app.get('/:file', function(request, response, next) {

@@ -5,13 +5,8 @@ var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
 require('bootstrap');
 
-var UploadModal = require('./UploadModal.js');
-var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
+var UploadModal = require('./uploadmodal.js');
 
-var UploadModalButton = require('./UploadModalButton.js')(uploadModal);
-ReactDOM.render(<UploadModalButton />, document.getElementById('UploadModalButton'));
-
-var NavBar = require('./NavBar.js');
 var tabs = [
     {
         title: "Home",
@@ -26,4 +21,11 @@ var tabs = [
         content: "Face your judgement"
     }
 ];
+
+var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
+
+var UploadModalButton = require('./uploadmodalbutton.js')(uploadModal);
+ReactDOM.render(<UploadModalButton />, document.getElementById('UploadModalButton'));
+
+var NavBar = require('./navbar.js');
 ReactDOM.render(<NavBar tabs={tabs}/>, document.getElementById('NavBar'));
