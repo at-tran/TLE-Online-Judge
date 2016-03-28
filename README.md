@@ -29,7 +29,8 @@ An Online Judge for Computer Science teachers and students
 - Web worker :white_check_mark:
 - User information
 - Results
-- Single page
+- Single page :white_check_mark:
+- Serverside rendering
 
 ## Hosting
 This project is hosted by Heroku: <https://tle-online-judge.herokuapp.com/>

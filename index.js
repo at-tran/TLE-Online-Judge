@@ -59,6 +59,11 @@ app.post('/upload', function(request, response) {
     response.end();
 });
 
+app.get('/scores', function(request, response) {
+    response.end()
+    
+});
+
 app.use(express.static('public'));
 
 app.listen(app.get('port'), function() {

@@ -6,6 +6,24 @@ var Dropzone = require('react-dropzone');
 require('bootstrap');
 
 var UploadModal = require('./uploadmodal.js');
+var ScoresTable = require('./scorestable.js');
+var UploadModalButton = require('./uploadmodalbutton.js');
+var NavBar = require('./navbar.js');
+
+var results = [
+    {
+        username: "Khang",
+        problem: "HACKNASA",
+        score: "100/100",
+        time: "0.69"
+    },
+    {
+        username: "Tho",
+        problem: "PROTECTNASA",
+        score: "0/100",
+        time: "0.00"
+    }
+]
 
 var tabs = [
     {
@@ -18,14 +36,12 @@ var tabs = [
     },
     {
         title: "Scores",
-        content: "Face your judgement"
+        content: <ScoresTable results={results} />
     }
 ];
 
 var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
 
-var UploadModalButton = require('./uploadmodalbutton.js')(uploadModal);
-ReactDOM.render(<UploadModalButton />, document.getElementById('UploadModalButton'));
+ReactDOM.render(<UploadModalButton uploadModal={uploadModal} />, document.getElementById('UploadModalButton'));
 
-var NavBar = require('./navbar.js');
-ReactDOM.render(<NavBar tabs={tabs}/>, document.getElementById('NavBar'));
+ReactDOM.render(<NavBar tabs={tabs} />, document.getElementById('NavBar'));

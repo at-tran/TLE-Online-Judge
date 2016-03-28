@@ -54,12 +54,22 @@
 	__webpack_require__(162);
 
 	var UploadModal = __webpack_require__(175);
-	var uploadModal = ReactDOM.render(React.createElement(UploadModal, null), document.getElementById('UploadModal'));
+	var ScoresTable = __webpack_require__(307);
+	var UploadModalButton = __webpack_require__(308);
+	var NavBar = __webpack_require__(309);
 
-	var UploadModalButton = __webpack_require__(307)(uploadModal);
-	ReactDOM.render(React.createElement(UploadModalButton, null), document.getElementById('UploadModalButton'));
+	var results = [{
+	    username: "Khang",
+	    problem: "HACKNASA",
+	    score: "100/100",
+	    time: "0.69"
+	}, {
+	    username: "Tho",
+	    problem: "PROTECTNASA",
+	    score: "0/100",
+	    time: "0.00"
+	}];
 
-	var NavBar = __webpack_require__(308);
 	var tabs = [{
 	    title: "Home",
 	    content: "Welcome home"
@@ -68,8 +78,13 @@
 	    content: "Prepare to face the challenge"
 	}, {
 	    title: "Scores",
-	    content: "Face your judgement"
+	    content: React.createElement(ScoresTable, { results: results })
 	}];
+
+	var uploadModal = ReactDOM.render(React.createElement(UploadModal, null), document.getElementById('UploadModal'));
+
+	ReactDOM.render(React.createElement(UploadModalButton, { uploadModal: uploadModal }), document.getElementById('UploadModalButton'));
+
 	ReactDOM.render(React.createElement(NavBar, { tabs: tabs }), document.getElementById('NavBar'));
 
 /***/ },
@@ -77,7 +92,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.1
+	 * jQuery JavaScript Library v2.2.2
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -87,7 +102,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-02-22T19:11Z
+	 * Date: 2016-03-17T17:51Z
 	 */
 
 	(function( global, factory ) {
@@ -143,7 +158,7 @@
 
 
 	var
-		version = "2.2.1",
+		version = "2.2.2",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -354,6 +369,7 @@
 		},
 
 		isPlainObject: function( obj ) {
+			var key;
 
 			// Not plain objects:
 			// - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -363,14 +379,18 @@
 				return false;
 			}
 
+			// Not own constructor property must be Object
 			if ( obj.constructor &&
-					!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+					!hasOwn.call( obj, "constructor" ) &&
+					!hasOwn.call( obj.constructor.prototype || {}, "isPrototypeOf" ) ) {
 				return false;
 			}
 
-			// If the function hasn't returned already, we're confident that
-			// |obj| is a plain object, created by {} or constructed with new Object
-			return true;
+			// Own properties are enumerated firstly, so to speed up,
+			// if last one is own, then all properties are own
+			for ( key in obj ) {}
+
+			return key === undefined || hasOwn.call( obj, key );
 		},
 
 		isEmptyObject: function( obj ) {
@@ -7403,6 +7423,12 @@
 		}
 	} );
 
+	// Support: IE <=11 only
+	// Accessing the selectedIndex property
+	// forces the browser to respect setting selected
+	// on the option
+	// The getter ensures a default option is selected
+	// when in an optgroup
 	if ( !support.optSelected ) {
 		jQuery.propHooks.selected = {
 			get: function( elem ) {
@@ -7411,6 +7437,16 @@
 					parent.parentNode.selectedIndex;
 				}
 				return null;
+			},
+			set: function( elem ) {
+				var parent = elem.parentNode;
+				if ( parent ) {
+					parent.selectedIndex;
+
+					if ( parent.parentNode ) {
+						parent.parentNode.selectedIndex;
+					}
+				}
 			}
 		};
 	}
@@ -7605,7 +7641,8 @@
 
 
 
-	var rreturn = /\r/g;
+	var rreturn = /\r/g,
+		rspaces = /[\x20\t\r\n\f]+/g;
 
 	jQuery.fn.extend( {
 		val: function( value ) {
@@ -7681,9 +7718,15 @@
 			option: {
 				get: function( elem ) {
 
-					// Support: IE<11
-					// option.value not trimmed (#14858)
-					return jQuery.trim( elem.value );
+					var val = jQuery.find.attr( elem, "value" );
+					return val != null ?
+						val :
+
+						// Support: IE10-11+
+						// option.text throws exceptions (#14686, #14858)
+						// Strip and collapse whitespace
+						// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+						jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 				}
 			},
 			select: {
@@ -7736,7 +7779,7 @@
 					while ( i-- ) {
 						option = options[ i ];
 						if ( option.selected =
-								jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
+							jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
 						) {
 							optionSet = true;
 						}
@@ -9431,18 +9474,6 @@
 
 
 
-	// Support: Safari 8+
-	// In Safari 8 documents created via document.implementation.createHTMLDocument
-	// collapse sibling forms: the second one becomes a child of the first one.
-	// Because of that, this security measure has to be disabled in Safari 8.
-	// https://bugs.webkit.org/show_bug.cgi?id=137337
-	support.createHTMLDocument = ( function() {
-		var body = document.implementation.createHTMLDocument( "" ).body;
-		body.innerHTML = "<form></form><form></form>";
-		return body.childNodes.length === 2;
-	} )();
-
-
 	// Argument "data" should be string of html
 	// context (optional): If specified, the fragment will be created in this context,
 	// defaults to document
@@ -9455,12 +9486,7 @@
 			keepScripts = context;
 			context = false;
 		}
-
-		// Stop scripts or inline event handlers from being executed immediately
-		// by using document.implementation
-		context = context || ( support.createHTMLDocument ?
-			document.implementation.createHTMLDocument( "" ) :
-			document );
+		context = context || document;
 
 		var parsed = rsingleTag.exec( data ),
 			scripts = !keepScripts && [];
@@ -37981,6 +38007,8 @@
 
 	var _classCallCheck = __webpack_require__(225)['default'];
 
+	var _objectWithoutProperties = __webpack_require__(193)['default'];
+
 	var _extends = __webpack_require__(177)['default'];
 
 	var _interopRequireDefault = __webpack_require__(198)['default'];
@@ -38003,6 +38031,10 @@
 
 	var _utilsChildrenValueInputValidation2 = _interopRequireDefault(_utilsChildrenValueInputValidation);
 
+	var _reactPropTypesLibElementType = __webpack_require__(215);
+
+	var _reactPropTypesLibElementType2 = _interopRequireDefault(_reactPropTypesLibElementType);
+
 	var Static = (function (_InputBase) {
 	  _inherits(Static, _InputBase);
 
@@ -38021,9 +38053,14 @@
 	  };
 
 	  Static.prototype.renderInput = function renderInput() {
+	    var _props2 = this.props;
+	    var ComponentClass = _props2.componentClass;
+
+	    var props = _objectWithoutProperties(_props2, ['componentClass']);
+
 	    return _react2['default'].createElement(
-	      'p',
-	      _extends({}, this.props, { className: _classnames2['default'](this.props.className, 'form-control-static'), ref: 'input', key: 'input' }),
+	      ComponentClass,
+	      _extends({}, props, { className: _classnames2['default'](props.className, 'form-control-static'), ref: 'input', key: 'input' }),
 	      this.getValue()
 	    );
 	  };
@@ -38033,7 +38070,15 @@
 
 	Static.propTypes = {
 	  value: _utilsChildrenValueInputValidation2['default'],
+	  /**
+	   * You can override the default 'p' with a custom element
+	   */
+	  componentClass: _reactPropTypesLibElementType2['default'],
 	  children: _utilsChildrenValueInputValidation2['default']
+	};
+
+	Static.defaultProps = {
+	  componentClass: 'p'
 	};
 
 	exports['default'] = Static;
@@ -38218,6 +38263,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var editorOptions = ['minLines', 'maxLines', 'readOnly', 'highlightActiveLine', 'tabSize', 'enableBasicAutocompletion', 'enableLiveAutocompletion', 'enableSnippets '];
+
 	var ReactAce = (function (_Component) {
 	  _inherits(ReactAce, _Component);
 
@@ -38235,6 +38282,8 @@
 	  _createClass(ReactAce, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      var _this2 = this;
+
 	      var _props = this.props;
 	      var name = _props.name;
 	      var onBeforeLoad = _props.onBeforeLoad;
@@ -38245,14 +38294,10 @@
 	      var cursorStart = _props.cursorStart;
 	      var showGutter = _props.showGutter;
 	      var wrapEnabled = _props.wrapEnabled;
-	      var minLines = _props.minLines;
-	      var maxLines = _props.maxLines;
-	      var readOnly = _props.readOnly;
-	      var highlightActiveLine = _props.highlightActiveLine;
-	      var tabSize = _props.tabSize;
 	      var showPrintMargin = _props.showPrintMargin;
 	      var keyboardHandler = _props.keyboardHandler;
 	      var onLoad = _props.onLoad;
+	      var commands = _props.commands;
 
 	      this.editor = _brace2['default'].edit(name);
 
@@ -38271,17 +38316,23 @@
 	      this.editor.setValue(value, cursorStart);
 	      this.editor.renderer.setShowGutter(showGutter);
 	      this.editor.getSession().setUseWrapMode(wrapEnabled);
-	      this.editor.setOption('minLines', minLines);
-	      this.editor.setOption('maxLines', maxLines);
-	      this.editor.setOption('readOnly', readOnly);
-	      this.editor.setOption('highlightActiveLine', highlightActiveLine);
-	      this.editor.setOption('tabSize', tabSize);
 	      this.editor.setShowPrintMargin(showPrintMargin);
 	      this.editor.on('focus', this.onFocus);
 	      this.editor.on('blur', this.onBlur);
 	      this.editor.on('copy', this.onCopy);
 	      this.editor.on('paste', this.onPaste);
 	      this.editor.on('change', this.onChange);
+
+	      for (var i = 0; i < editorOptions.length; i++) {
+	        var option = editorOptions[i];
+	        this.editor.setOption(option, this.props[option]);
+	      }
+
+	      if (Array.isArray(commands)) {
+	        commands.forEach(function (command) {
+	          _this2.editor.commands.addCommand(command);
+	        });
+	      }
 
 	      if (keyboardHandler) {
 	        this.editor.setKeyboardHandler('ace/keyboard/' + keyboardHandler);
@@ -38295,6 +38346,14 @@
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      var oldProps = this.props;
+
+	      for (var i = 0; i < editorOptions.length; i++) {
+	        var option = editorOptions[i];
+	        if (nextProps[option] !== oldProps[option]) {
+	          this.editor.setOption(option, nextProps[option]);
+	        }
+	      }
+
 	      if (nextProps.mode !== oldProps.mode) {
 	        this.editor.getSession().setMode('ace/mode/' + nextProps.mode);
 	      }
@@ -38304,20 +38363,8 @@
 	      if (nextProps.fontSize !== oldProps.fontSize) {
 	        this.editor.setFontSize(nextProps.fontSize);
 	      }
-	      if (nextProps.minLines !== oldProps.minLines) {
-	        this.editor.setOption('minLines', nextProps.minLines);
-	      }
-	      if (nextProps.maxLines !== oldProps.maxLines) {
-	        this.editor.setOption('maxLines', nextProps.maxLines);
-	      }
-	      if (nextProps.readOnly !== oldProps.readOnly) {
-	        this.editor.setOption('readOnly', nextProps.readOnly);
-	      }
-	      if (nextProps.highlightActiveLine !== oldProps.highlightActiveLine) {
-	        this.editor.setOption('highlightActiveLine', nextProps.highlightActiveLine);
-	      }
-	      if (nextProps.tabSize !== oldProps.tabSize) {
-	        this.editor.setOption('tabSize', nextProps.tabSize);
+	      if (nextProps.wrapEnabled !== oldProps.wrapEnabled) {
+	        this.editor.getSession().setUseWrapMode(nextProps.wrapEnabled);
 	      }
 	      if (nextProps.showPrintMargin !== oldProps.showPrintMargin) {
 	        this.editor.setShowPrintMargin(nextProps.showPrintMargin);
@@ -38335,6 +38382,7 @@
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
+	      this.editor.destroy();
 	      this.editor = null;
 	    }
 	  }, {
@@ -38422,7 +38470,10 @@
 	  cursorStart: _react.PropTypes.number,
 	  editorProps: _react.PropTypes.object,
 	  keyboardHandler: _react.PropTypes.string,
-	  wrapEnabled: _react.PropTypes.bool
+	  wrapEnabled: _react.PropTypes.bool,
+	  enableBasicAutocompletion: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.array]),
+	  enableLiveAutocompletion: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.array]),
+	  commands: _react.PropTypes.array
 	};
 
 	ReactAce.defaultProps = {
@@ -38445,7 +38496,9 @@
 	  tabSize: 4,
 	  cursorStart: 1,
 	  editorProps: {},
-	  wrapEnabled: false
+	  wrapEnabled: false,
+	  enableBasicAutocompletion: false,
+	  enableLiveAutocompletion: false
 	};
 	module.exports = exports['default'];
 
@@ -57484,27 +57537,77 @@
 	var ReactDOM = __webpack_require__(159);
 	var Dropzone = __webpack_require__(160);
 	__webpack_require__(162);
-	var Modal = __webpack_require__(176);
-	var Button = __webpack_require__(290);
-	var Input = __webpack_require__(291);
-	var AceEditor = __webpack_require__(301);
-	__webpack_require__(305);
-	__webpack_require__(306);
+	var Table = __webpack_require__(321);
 
-	module.exports = function (uploadModal) {
-	    return React.createClass({
-	        handleClick: function handleClick() {
-	            uploadModal.showModal();
-	        },
-	        render: function render() {
+	module.exports = React.createClass({
+	    displayName: 'exports',
+
+	    render: function render() {
+	        var rows = this.props.results.map(function (result, index) {
 	            return React.createElement(
-	                Button,
-	                { bsStyle: 'primary', bsSize: 'large', onClick: this.handleClick },
-	                'Upload Submission'
+	                'tr',
+	                { key: index, className: 'success' },
+	                React.createElement(
+	                    'td',
+	                    null,
+	                    result.username
+	                ),
+	                React.createElement(
+	                    'td',
+	                    null,
+	                    result.problem
+	                ),
+	                React.createElement(
+	                    'td',
+	                    null,
+	                    result.score
+	                ),
+	                React.createElement(
+	                    'td',
+	                    null,
+	                    result.time
+	                )
 	            );
-	        }
-	    });
-	};
+	        });
+	        return React.createElement(
+	            Table,
+	            null,
+	            React.createElement(
+	                'thead',
+	                null,
+	                React.createElement(
+	                    'tr',
+	                    null,
+	                    React.createElement(
+	                        'th',
+	                        null,
+	                        'Username'
+	                    ),
+	                    React.createElement(
+	                        'th',
+	                        null,
+	                        'Problem'
+	                    ),
+	                    React.createElement(
+	                        'th',
+	                        null,
+	                        'Score'
+	                    ),
+	                    React.createElement(
+	                        'th',
+	                        null,
+	                        'Time'
+	                    )
+	                )
+	            ),
+	            React.createElement(
+	                'tbody',
+	                null,
+	                rows
+	            )
+	        );
+	    }
+	});
 
 /***/ },
 /* 308 */
@@ -57516,9 +57619,44 @@
 	window.$ = window.jQuery = $;
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(159);
+	var Dropzone = __webpack_require__(160);
 	__webpack_require__(162);
-	var Tabs = __webpack_require__(309);
-	var Tab = __webpack_require__(318);
+	var Modal = __webpack_require__(176);
+	var Button = __webpack_require__(290);
+	var Input = __webpack_require__(291);
+	var AceEditor = __webpack_require__(301);
+	__webpack_require__(305);
+	__webpack_require__(306);
+
+	module.exports = React.createClass({
+	    displayName: 'exports',
+
+	    handleClick: function handleClick() {
+	        this.props.uploadModal.showModal();
+	    },
+
+	    render: function render() {
+	        return React.createElement(
+	            Button,
+	            { bsStyle: 'primary', bsSize: 'large', onClick: this.handleClick },
+	            'Upload Submission'
+	        );
+	    }
+	});
+
+/***/ },
+/* 309 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(1);
+	window.$ = window.jQuery = $;
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(159);
+	__webpack_require__(162);
+	var Tabs = __webpack_require__(310);
+	var Tab = __webpack_require__(319);
 
 	module.exports = React.createClass({
 	    displayName: 'exports',
@@ -57540,7 +57678,7 @@
 	});
 
 /***/ },
-/* 309 */
+/* 310 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -57567,15 +57705,15 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Col = __webpack_require__(310);
+	var _Col = __webpack_require__(311);
 
 	var _Col2 = _interopRequireDefault(_Col);
 
-	var _Nav = __webpack_require__(311);
+	var _Nav = __webpack_require__(312);
 
 	var _Nav2 = _interopRequireDefault(_Nav);
 
-	var _NavItem = __webpack_require__(315);
+	var _NavItem = __webpack_require__(316);
 
 	var _NavItem2 = _interopRequireDefault(_NavItem);
 
@@ -57583,7 +57721,7 @@
 
 	var _styleMaps2 = _interopRequireDefault(_styleMaps);
 
-	var _keycode = __webpack_require__(317);
+	var _keycode = __webpack_require__(318);
 
 	var _keycode2 = _interopRequireDefault(_keycode);
 
@@ -57595,7 +57733,7 @@
 
 	var _utilsBootstrapUtils2 = _interopRequireDefault(_utilsBootstrapUtils);
 
-	var _utilsValidComponentChildren = __webpack_require__(313);
+	var _utilsValidComponentChildren = __webpack_require__(314);
 
 	var _utilsValidComponentChildren2 = _interopRequireDefault(_utilsValidComponentChildren);
 
@@ -57988,7 +58126,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 310 */
+/* 311 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58241,7 +58379,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 311 */
+/* 312 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58264,7 +58402,7 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _reactPropTypesLibAll = __webpack_require__(312);
+	var _reactPropTypesLibAll = __webpack_require__(313);
 
 	var _reactPropTypesLibAll2 = _interopRequireDefault(_reactPropTypesLibAll);
 
@@ -58276,7 +58414,7 @@
 
 	var _utilsBootstrapUtils2 = _interopRequireDefault(_utilsBootstrapUtils);
 
-	var _utilsValidComponentChildren = __webpack_require__(313);
+	var _utilsValidComponentChildren = __webpack_require__(314);
 
 	var _utilsValidComponentChildren2 = _interopRequireDefault(_utilsValidComponentChildren);
 
@@ -58284,7 +58422,7 @@
 
 	var _utilsCreateChainedFunction2 = _interopRequireDefault(_utilsCreateChainedFunction);
 
-	var _Collapse = __webpack_require__(314);
+	var _Collapse = __webpack_require__(315);
 
 	var _Collapse2 = _interopRequireDefault(_Collapse);
 
@@ -58459,7 +58597,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 312 */
+/* 313 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -58500,7 +58638,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 313 */
+/* 314 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58648,7 +58786,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 314 */
+/* 315 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58899,7 +59037,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 315 */
+/* 316 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -58920,7 +59058,7 @@
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _SafeAnchor = __webpack_require__(316);
+	var _SafeAnchor = __webpack_require__(317);
 
 	var _SafeAnchor2 = _interopRequireDefault(_SafeAnchor);
 
@@ -59015,7 +59153,7 @@
 	//eslint-disable-line
 
 /***/ },
-/* 316 */
+/* 317 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59080,7 +59218,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 317 */
+/* 318 */
 /***/ function(module, exports) {
 
 	// Source: http://jsfiddle.net/vWx8V/
@@ -59231,7 +59369,7 @@
 
 
 /***/ },
-/* 318 */
+/* 319 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -59258,7 +59396,7 @@
 
 	var _utilsBootstrapUtils2 = _interopRequireDefault(_utilsBootstrapUtils);
 
-	var _utilsTransitionEvents = __webpack_require__(319);
+	var _utilsTransitionEvents = __webpack_require__(320);
 
 	var _utilsTransitionEvents2 = _interopRequireDefault(_utilsTransitionEvents);
 
@@ -59363,7 +59501,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 319 */
+/* 320 */
 /***/ function(module, exports) {
 
 	/**
@@ -59479,6 +59617,72 @@
 	};
 
 	exports['default'] = ReactTransitionEvents;
+	module.exports = exports['default'];
+
+/***/ },
+/* 321 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _extends = __webpack_require__(177)['default'];
+
+	var _interopRequireDefault = __webpack_require__(198)['default'];
+
+	exports.__esModule = true;
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _classnames = __webpack_require__(199);
+
+	var _classnames2 = _interopRequireDefault(_classnames);
+
+	var Table = _react2['default'].createClass({
+	  displayName: 'Table',
+
+	  propTypes: {
+	    striped: _react2['default'].PropTypes.bool,
+	    bordered: _react2['default'].PropTypes.bool,
+	    condensed: _react2['default'].PropTypes.bool,
+	    hover: _react2['default'].PropTypes.bool,
+	    responsive: _react2['default'].PropTypes.bool
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      bordered: false,
+	      condensed: false,
+	      hover: false,
+	      responsive: false,
+	      striped: false
+	    };
+	  },
+
+	  render: function render() {
+	    var classes = {
+	      'table': true,
+	      'table-striped': this.props.striped,
+	      'table-bordered': this.props.bordered,
+	      'table-condensed': this.props.condensed,
+	      'table-hover': this.props.hover
+	    };
+	    var table = _react2['default'].createElement(
+	      'table',
+	      _extends({}, this.props, { className: _classnames2['default'](this.props.className, classes) }),
+	      this.props.children
+	    );
+
+	    return this.props.responsive ? _react2['default'].createElement(
+	      'div',
+	      { className: 'table-responsive' },
+	      table
+	    ) : table;
+	  }
+	});
+
+	exports['default'] = Table;
 	module.exports = exports['default'];
 
 /***/ }
