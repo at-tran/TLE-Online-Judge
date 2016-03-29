@@ -6,24 +6,24 @@ var Dropzone = require('react-dropzone');
 require('bootstrap');
 
 var UploadModal = require('./uploadmodal.js');
-var ScoresTable = require('./scorestable.js');
+var ResultsTable = require('./resultstable.js');
 var UploadModalButton = require('./uploadmodalbutton.js');
 var NavBar = require('./navbar.js');
 
-var results = [
-    {
-        username: "Khang",
-        problem: "HACKNASA",
-        score: "100/100",
-        time: "0.69"
-    },
-    {
-        username: "Tho",
-        problem: "PROTECTNASA",
-        score: "0/100",
-        time: "0.00"
-    }
-]
+// var results = [
+//     {
+//         username: "Khang",
+//         problem: "HACKNASA",
+//         score: "100/100",
+//         time: "0.69"
+//     },
+//     {
+//         username: "Tho",
+//         problem: "PROTECTNASA",
+//         score: "0/100",
+//         time: "0.00"
+//     }
+// ]
 
 var tabs = [
     {
@@ -36,7 +36,7 @@ var tabs = [
     },
     {
         title: "Scores",
-        content: <ScoresTable results={results} />
+        content: <ResultsTable />
     }
 ];
 

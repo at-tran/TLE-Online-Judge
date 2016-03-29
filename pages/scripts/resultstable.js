@@ -5,10 +5,27 @@ var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
 require('bootstrap');
 var Table = require('react-bootstrap/lib/Table');
+var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 
 module.exports = React.createClass({
+    getInitialState: function() {
+        return {results: []};
+    },
+
+    componentWillMount: function() {
+        setInterval(function() {
+            $.ajax('scores', {
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    this.setState({results: data}); 
+                }.bind(this)
+            });
+        }.bind(this), 5000);
+    },
+
     render: function() {
-        var rows = this.props.results.map((result, index) => {
+        var rows = this.state.results.map((result, index) => {
             return (
                 <tr key={index} className="success">
                     <td>{result.username}</td>
@@ -28,9 +45,9 @@ module.exports = React.createClass({
                         <th>Time</th>
                     </tr>
                 </thead>
-                <tbody>
+                <ReactCSSTransitionGroup component="tbody" transitionName="example" transitionEnterTimeout={500} transitionLeaveTimeout={300}>
                     {rows}
-                </tbody>
+                </ReactCSSTransitionGroup>
             </Table>
         )
     }

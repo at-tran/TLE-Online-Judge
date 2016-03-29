@@ -10,6 +10,7 @@ var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
 var RedisStore = require('connect-redis')(session);
 var submission = require('./bin/submission.js');
+var fetchScores = require('./bin/fetch-scores.js');
 
 app.use(session({
     secret: randString(10),
@@ -59,9 +60,11 @@ app.post('/upload', function(request, response) {
     response.end();
 });
 
-app.get('/scores', function(request, response) {
-    response.end()
-    
+app.post('/scores', function(request, response) {
+    fetchScores(request, function(err, result) {
+        if (err) response.redirect('/error.html');
+        else response.json(result);
+    })
 });
 
 app.use(express.static('public'));
