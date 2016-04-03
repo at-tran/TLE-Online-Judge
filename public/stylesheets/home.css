@@ -1,0 +1,27 @@
+* {
+  margin: 0px auto 0px;
+  padding: 0px; }
+
+header {
+  width: 100%;
+  height: 100px;
+  border-bottom: 1px solid gray; }
+  header h4 {
+    text-align: center; }
+
+#UploadModalButton {
+  float: left;
+  margin-left: 10px; }
+
+.right-inner-addon {
+  position: relative;
+  width: 300px; }
+  .right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px; }
+
+#main_content {
+  margin-top: 80px; }
+
+/*# sourceMappingURL=home.css.map */
