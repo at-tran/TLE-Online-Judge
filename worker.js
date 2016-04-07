@@ -5,7 +5,12 @@ var queue = kue.createQueue({
 
 queue.process('submission', function(job, done) {
     console.log('Processing ' + job.data.filename + ' from ' + job.data.username);
-    done(null, job.data.size);
+    done(null, {
+        username: job.data.username,
+        problem: job.data.filename,
+        score: job.data.size,
+        time: 99
+    });
 });
 
 queue.watchStuckJobs(10000);

@@ -27,16 +27,20 @@ var NavBar = require('./navbar.js');
 
 var tabs = [
     {
-        title: "Home",
+        title: <span className="glyphicon glyphicon-home"> Home</span>,
         content: "Welcome home"
     },
     {
-        title: "Problems",
+        title: <span className="glyphicon glyphicon-list-alt"> Problem</span>,
         content: "Prepare to face the challenge"
     },
     {
-        title: "Scores",
+        title: <span className="glyphicon glyphicon-signal"> Status</span>,
         content: <ResultsTable />
+    },
+    {
+        title: <span className="glyphicon glyphicon-flag"> Help</span>,
+        content: "Haaaaaaaalp"
     }
 ];
 

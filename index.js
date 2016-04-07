@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var session = require('express-session');
 var path = require('path');
-var exec = require('child_process').exec;
 var bodyParser = require('body-parser');
 var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
@@ -11,6 +10,9 @@ var randString = require('./bin/randString.js');
 var RedisStore = require('connect-redis')(session);
 var submission = require('./bin/submission.js');
 var fetchScores = require('./bin/fetch-scores.js');
+var http = require('http');
+var WebSocketServer = require('ws').Server;
+var wss;
 
 app.use(session({
     secret: randString(10),
@@ -56,11 +58,11 @@ app.post('/signup', function(request, response) {
 
 app.post('/upload', function(request, response) {
     console.log(request.body);
-    submission(request.body, request.session.username);
+    submission(request.body, request.session.username, wss);
     response.end();
 });
 
-app.post('/scores', function(request, response) {
+app.get('/scores', function(request, response) {
     fetchScores(request, function(err, result) {
         if (err) response.redirect('/error.html');
         else response.json(result);
@@ -69,6 +71,10 @@ app.post('/scores', function(request, response) {
 
 app.use(express.static('public'));
 
-app.listen(app.get('port'), function() {
+var server = http.createServer(app);
+
+server.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'));
 });
+
+wss = new WebSocketServer({server: server});

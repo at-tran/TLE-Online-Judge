@@ -28,6 +28,8 @@ var FileContent = React.createClass({
                     onChange={this.props.onChange}
                     name={this.props.index.toString()}
                     editorProps={{$blockScrolling: Infinity}}
+                    enableBasicAutocompletion={false}
+                    enableLiveAutocompletion={false}
                 />
             </div>
         );

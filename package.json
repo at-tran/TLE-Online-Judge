@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/TashaGospel/TLE-Online-Judge#readme",
   "dependencies": {
+    "babel-core": "^6.7.4",
     "body-parser": "^1.15.0",
     "bootstrap": "^3.3.6",
     "connect-redis": "^3.0.2",
@@ -36,7 +37,8 @@
     "express-session": "^1.13.0",
     "jade": "^1.11.0",
     "kue": "^0.10.5",
-    "mongodb": "^2.1.10"
+    "mongodb": "^2.1.14",
+    "ws": "^1.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",

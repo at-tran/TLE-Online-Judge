@@ -13,15 +13,20 @@ module.exports = React.createClass({
     },
 
     componentWillMount: function() {
-        setInterval(function() {
-            $.ajax('scores', {
-                type: 'POST',
-                dataType: 'json',
-                success: function(data) {
-                    this.setState({results: data}); 
-                }.bind(this)
+        $.ajax('scores', {
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                this.setState({results: data}); 
+            }.bind(this)
+        });
+        var host = location.origin.replace(/^http/, 'ws');
+        var ws = new WebSocket(host);
+        ws.onmessage = function(event) {
+            this.setState({
+                results: this.state.results.concat(JSON.parse(event.data))
             });
-        }.bind(this), 5000);
+        }.bind(this);
     },
 
     render: function() {
