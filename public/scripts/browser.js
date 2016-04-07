@@ -44,8 +44,15 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(1);
+	'use strict';
 
+	var React = __webpack_require__(2);
+	var ReactDOM = __webpack_require__(159);
+	var ReactDOMServer = __webpack_require__(315);
+	var App = __webpack_require__(1);
+
+	ReactDOM.render(React.createElement(App, null), document.getElementById('content'));
+	// console.log(ReactDOMServer.renderToString(<App />));
 
 /***/ },
 /* 1 */
@@ -58320,6 +58327,15 @@
 
 	exports['default'] = ReactTransitionEvents;
 	module.exports = exports['default'];
+
+/***/ },
+/* 315 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(149);
+
 
 /***/ }
 /******/ ]);

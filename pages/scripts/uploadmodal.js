@@ -1,9 +1,6 @@
-var $ = require('jquery');
-window.$ = window.jQuery = $;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
-require('bootstrap');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
 var Input = require('react-bootstrap/lib/Input');
@@ -110,22 +107,27 @@ module.exports = React.createClass({
 
     render: function() {
         return (
-            <Modal show={this.state.show} onHide={this.hideModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Upload submission</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Dropzone onDrop={this.onDrop}>
-                        <div>Upload</div>
-                    </Dropzone>
-                    <FileContentList contents={this.state.contents} onChange={this.onChange} onClick={this.onClick}/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={this.handleSubmit}>
-                        Submit
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <div>
+                <Button bsStyle="primary" bsSize="large" onClick={this.showModal}>
+                    Upload Submission
+                </Button>
+                <Modal show={this.state.show} onHide={this.hideModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Upload submission</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Dropzone onDrop={this.onDrop}>
+                            <div>Upload</div>
+                        </Dropzone>
+                        <FileContentList contents={this.state.contents} onChange={this.onChange} onClick={this.onClick}/>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.handleSubmit}>
+                            Submit
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
         );
     }
 });

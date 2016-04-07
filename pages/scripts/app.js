@@ -1,9 +1,6 @@
-var $ = require('jquery');
-window.$ = window.jQuery = $;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Dropzone = require('react-dropzone');
-require('bootstrap');
 
 var UploadModal = require('./uploadmodal.js');
 var ResultsTable = require('./resultstable.js');
@@ -44,8 +41,19 @@ var tabs = [
     }
 ];
 
-var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
+// var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
 
-ReactDOM.render(<UploadModalButton uploadModal={uploadModal} />, document.getElementById('UploadModalButton'));
+// ReactDOM.render(<UploadModalButton uploadModal={uploadModal} />, document.getElementById('UploadModalButton'));
 
-ReactDOM.render(<NavBar tabs={tabs} />, document.getElementById('NavBar'));
+// ReactDOM.render(<NavBar tabs={tabs} />, document.getElementById('NavBar'));
+
+module.exports = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <UploadModal />
+                <NavBar tabs={tabs} />
+            </div>
+        );
+    }
+});

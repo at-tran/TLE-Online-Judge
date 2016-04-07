@@ -1,9 +1,14 @@
+doctype
 html(lang="en")
-    meta(charset="UTF-8")
-    title TLE Online Judge
-body
-    h1(style="color: red; text-align: center; font-size: 24px;") TLE Online Judge
-    h2 Welcome #{username}
-    != content
-    // script(src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js")
-    // script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.js")
+    head
+        meta(charset="UTF-8")
+        title TLE Online Judge
+        link(rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.css")
+        link(rel="stylesheet" href="stylesheets/home.css")
+    body
+        h1(style="color: red; text-align: center; font-size: 24px;") TLE Online Judge
+        h2 Welcome #{username}
+        div(id="content")!= content
+        script(src="scripts/browser.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js")

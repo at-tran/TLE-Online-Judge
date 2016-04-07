@@ -13,6 +13,9 @@ var fetchScores = require('./bin/fetch-scores.js');
 var http = require('http');
 var WebSocketServer = require('ws').Server;
 var wss;
+var React = require('react');
+var ReactDOMServer = require('react-dom/server');
+// var App = React.createFactory(require('./public/scripts/app.js'));
 
 app.use(session({
     secret: randString(10),
@@ -33,7 +36,8 @@ app.set('view engine', 'jade');
 // app.locals.pretty = true;
 
 app.get('/', function (request, response) {
-    response.redirect('/home.html');
+    // var html = ReactDOMServer.renderToString(App());
+    // response.render('page', {content: html, username: request.session.username});
 });
 
 app.get('/:file', function(request, response, next) {

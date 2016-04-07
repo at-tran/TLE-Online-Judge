@@ -1,8 +1,6 @@
 var $ = require('jquery');
-window.$ = window.jQuery = $;
 var React = require('react');
 var ReactDOM = require('react-dom');
-require('bootstrap');
 var Tabs = require('react-bootstrap/lib/Tabs');
 var Tab = require('react-bootstrap/lib/Tab');
 
