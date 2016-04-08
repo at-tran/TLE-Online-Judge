@@ -1,7 +1,4 @@
-var $ = require('jquery');
 var React = require('react');
-var ReactDOM = require('react-dom');
-var Dropzone = require('react-dropzone');
 var Table = require('react-bootstrap/lib/Table');
 var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 

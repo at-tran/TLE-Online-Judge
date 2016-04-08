@@ -12,7 +12,7 @@ module.exports = function(request, callback) {
     var res = db.collection('results').find({
         //        'username': request.session.username
     }).toArray(function(err, results) {
-        console.log(results);
+        //        console.log(results);
         callback(err, results);
     });
 }

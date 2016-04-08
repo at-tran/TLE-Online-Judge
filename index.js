@@ -3,7 +3,7 @@ var app = express();
 var session = require('express-session');
 var path = require('path');
 var bodyParser = require('body-parser');
-var renderPage = require('./bin/renderPage.js');
+// var renderPage = require('./bin/renderPage.js');
 var signup = require('./bin/signup.js');
 var login = require('./bin/login.js');
 var randString = require('./bin/randString.js');
@@ -13,8 +13,9 @@ var fetchScores = require('./bin/fetch-scores.js');
 var http = require('http');
 var WebSocketServer = require('ws').Server;
 var wss;
-var React = require('react');
-var ReactDOMServer = require('react-dom/server');
+var store = new RedisStore({url: process.env.REDIS_URL});
+var fs = require('fs');
+var jade = require('jade');
 // var App = React.createFactory(require('./public/scripts/app.js'));
 
 app.use(session({
@@ -22,7 +23,7 @@ app.use(session({
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
     resave: false,
-    store: new RedisStore({url: process.env.REDIS_URL})
+    store: store
 }));
 
 app.use(bodyParser.json());
@@ -30,21 +31,24 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('port', process.env.PORT || 5000);
 
-app.set('views', 'templates');
+app.set('views', 'views');
 app.set('view engine', 'jade');
 
 // app.locals.pretty = true;
 
+var htmlgen = jade.compileFile('views/page.jade');
+
 app.get('/', function (request, response) {
-    // var html = ReactDOMServer.renderToString(App());
-    // response.render('page', {content: html, username: request.session.username});
+    // response.render('page', {username: request.session.username, content: html, pretty:false});
+    // console.log(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
+    response.end(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
 });
 
-app.get('/:file', function(request, response, next) {
-    var file = request.params.file;
-    if (path.extname(file) === '.html') renderPage(response, file, request.session.username);
-    else next();
-});
+// app.get('/:file', function(request, response, next) {
+//     var file = request.params.file;
+//     if (path.extname(file) === '.html') response.sendFile(response, file, request.session.username);
+//     else next();
+// });
 
 app.post('/login', function(request, response) {
     login(request, response, function(err) {
@@ -61,7 +65,6 @@ app.post('/signup', function(request, response) {
 });
 
 app.post('/upload', function(request, response) {
-    console.log(request.body);
     submission(request.body, request.session.username, wss);
     response.end();
 });
@@ -82,3 +85,8 @@ server.listen(app.get('port'), function() {
 });
 
 wss = new WebSocketServer({server: server});
+
+wss.on('connection', function(ws) {
+    // var username = store.get(ws.upgradeReq)
+    console.log(ws.upgradeReq.headers.cookie);
+})

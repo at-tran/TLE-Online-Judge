@@ -8,7 +8,6 @@ html(lang="en")
     body
         h1(style="color: red; text-align: center; font-size: 24px;") TLE Online Judge
         h2 Welcome #{username}
-        div(id="content")!= content
+        div(id="content")
+            include rendered.html
         script(src="scripts/browser.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js")
-        script(src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js")

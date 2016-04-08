@@ -1,26 +1,10 @@
+window.$ = window.jQuery = require('jquery');
+require('bootstrap');
 var React = require('react');
-var ReactDOM = require('react-dom');
-var Dropzone = require('react-dropzone');
 
 var UploadModal = require('./uploadmodal.js');
 var ResultsTable = require('./resultstable.js');
-var UploadModalButton = require('./uploadmodalbutton.js');
 var NavBar = require('./navbar.js');
-
-// var results = [
-//     {
-//         username: "Khang",
-//         problem: "HACKNASA",
-//         score: "100/100",
-//         time: "0.69"
-//     },
-//     {
-//         username: "Tho",
-//         problem: "PROTECTNASA",
-//         score: "0/100",
-//         time: "0.00"
-//     }
-// ]
 
 var tabs = [
     {
@@ -40,12 +24,6 @@ var tabs = [
         content: "Haaaaaaaalp"
     }
 ];
-
-// var uploadModal = ReactDOM.render(<UploadModal />, document.getElementById('UploadModal'));
-
-// ReactDOM.render(<UploadModalButton uploadModal={uploadModal} />, document.getElementById('UploadModalButton'));
-
-// ReactDOM.render(<NavBar tabs={tabs} />, document.getElementById('NavBar'));
 
 module.exports = React.createClass({
     render: function() {

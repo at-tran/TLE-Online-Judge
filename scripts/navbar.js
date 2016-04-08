@@ -1,6 +1,4 @@
-var $ = require('jquery');
 var React = require('react');
-var ReactDOM = require('react-dom');
 var Tabs = require('react-bootstrap/lib/Tabs');
 var Tab = require('react-bootstrap/lib/Tab');
 
@@ -28,7 +26,7 @@ module.exports = React.createClass({
                         <li><div id="UploadModalButton"></div></li> 
                     </ul>
                 </div>
-                <Tabs defaultActiveKey={1}>
+                <Tabs defaultActiveKey={0}>
                     {tabs}
                 </Tabs>
             </nav>

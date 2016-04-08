@@ -1,7 +1,6 @@
 module.exports = {
     entry: {
-        app: ['./pages/scripts/app.js'],
-        browser: './pages/scripts/browser.js'
+        browser: './scripts/browser.js'
     },
     output: {
         path: './public/scripts',
