@@ -1,6 +1,7 @@
 var React = require('react');
 var Table = require('react-bootstrap/lib/Table');
 var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
+var io = require('socket.io-client');
 
 module.exports = React.createClass({
     getInitialState: function() {
@@ -15,13 +16,14 @@ module.exports = React.createClass({
                 this.setState({results: data}); 
             }.bind(this)
         });
-        var host = location.origin.replace(/^http/, 'ws');
-        var ws = new WebSocket(host);
-        ws.onmessage = function(event) {
+        // var host = location.origin.replace(/^http/, 'ws');
+        // var ws = new WebSocket(host);
+        var socket = io.connect(location.origin);
+        socket.on('message', function(data) {
             this.setState({
-                results: this.state.results.concat(JSON.parse(event.data))
+                results: this.state.results.concat(data)
             });
-        }.bind(this);
+        }.bind(this));
     },
 
     render: function() {

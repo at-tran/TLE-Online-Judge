@@ -37,7 +37,7 @@
     "jade": "^1.11.0",
     "kue": "^0.10.5",
     "mongodb": "^2.1.14",
-    "ws": "^1.0.1"
+    "socket.io": "^1.4.5"
   },
   "devDependencies": {
     "babel-core": "^6.7.4",

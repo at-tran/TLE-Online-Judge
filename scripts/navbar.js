@@ -21,9 +21,8 @@ module.exports = React.createClass({
                                 <input type="search" className="form-control" placeholder="Search" />
                             </div>
                         </li>
-                        <li><a href="#"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
-                        <li><a href="#"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
-                        <li><div id="UploadModalButton"></div></li> 
+                        <li><a href="signup.html"><span className="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="login.html"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
                     </ul>
                 </div>
                 <Tabs defaultActiveKey={0}>

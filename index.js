@@ -11,20 +11,25 @@ var RedisStore = require('connect-redis')(session);
 var submission = require('./bin/submission.js');
 var fetchScores = require('./bin/fetch-scores.js');
 var http = require('http');
-var WebSocketServer = require('ws').Server;
-var wss;
-var store = new RedisStore({url: process.env.REDIS_URL});
 var fs = require('fs');
 var jade = require('jade');
-// var App = React.createFactory(require('./public/scripts/app.js'));
-
-app.use(session({
+var parseParam = require('./bin/parse-param.js');
+var sessionMiddleware = session({
     secret: randString(10),
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
     resave: false,
-    store: store
-}));
+    store: new RedisStore({url: process.env.REDIS_URL})
+});
+
+var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+app.use(sessionMiddleware);
+
+io.use(function(socket, next) {
+    sessionMiddleware(socket.request, socket.request.res, next);
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -41,6 +46,7 @@ var htmlgen = jade.compileFile('views/page.jade');
 app.get('/', function (request, response) {
     // response.render('page', {username: request.session.username, content: html, pretty:false});
     // console.log(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
+    // console.log(request.sessionID);
     response.end(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
 });
 
@@ -65,7 +71,7 @@ app.post('/signup', function(request, response) {
 });
 
 app.post('/upload', function(request, response) {
-    submission(request.body, request.session.username, wss);
+    submission(request.body, request.session.username, io);
     response.end();
 });
 
@@ -78,15 +84,19 @@ app.get('/scores', function(request, response) {
 
 app.use(express.static('public'));
 
-var server = http.createServer(app);
+
+// console.log(parseParam('a','?a=b&c=d'));
+
+io.sockets.on('connection', function(socket) {
+    console.log(socket.request.session.username);
+    fetchScores(socket.request, function(err, results) {
+        socket.emit('message', results);
+        socket.join(socket.request.session.username);
+    })
+    // var username = store.get(ws.upgradeReq)
+    //    console.log(parseParam('connect.sid', '?' + ws.upgradeReq.headers.cookie));
+})
 
 server.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'));
 });
-
-wss = new WebSocketServer({server: server});
-
-wss.on('connection', function(ws) {
-    // var username = store.get(ws.upgradeReq)
-    console.log(ws.upgradeReq.headers.cookie);
-})

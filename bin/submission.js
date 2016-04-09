@@ -12,20 +12,18 @@ MongoClient.connect(url, function(err, mdb) {
     else db = mdb;
 })
 
-function queueSubmission(submission, wss) {
+function queueSubmission(submission, io) {
     queue.create('submission', submission).on('complete', function(result) {
         console.log('Processed submission ' + submission.filename + ' from ' + submission.username)
         console.log('Result is ' + JSON.stringify(result))
-        wss.clients.forEach(function(client) {
-            client.send(JSON.stringify(result));
-        })
+        io.to(submission.username).emit('message', result);
         db.collection('results').insertOne(result);
     }).removeOnComplete(true).save();
 }
 
-module.exports = function(files, username, wss) {
+module.exports = function(files, username, io) {
     files.forEach(function(file) {
         file.username = username;
-        queueSubmission(file, wss);
+        queueSubmission(file, io);
     });
 };

@@ -69,7 +69,7 @@ module.exports = React.createClass({
     onClick: function(index) {
         return function() {
             var newContents = this.state.contents;
-            newContents[index] = null;
+            newContents.splice(index, 1);
             this.setState({contents: newContents});
         }.bind(this);
     },
