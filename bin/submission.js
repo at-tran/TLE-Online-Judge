@@ -14,8 +14,8 @@ MongoClient.connect(url, function(err, mdb) {
 
 function queueSubmission(submission, io) {
     queue.create('submission', submission).on('complete', function(result) {
-        console.log('Processed submission ' + submission.filename + ' from ' + submission.username)
-        console.log('Result is ' + JSON.stringify(result))
+        // console.log('Processed submission ' + submission.filename + ' from ' + submission.username)
+        // console.log('Result is ' + JSON.stringify(result))
         io.to(submission.username).emit('message', result);
         db.collection('results').insertOne(result);
     }).removeOnComplete(true).save();

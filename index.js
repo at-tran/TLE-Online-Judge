@@ -1,29 +1,26 @@
 var express = require('express');
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
 var session = require('express-session');
-var path = require('path');
-var bodyParser = require('body-parser');
-// var renderPage = require('./bin/renderPage.js');
-var signup = require('./bin/signup.js');
-var login = require('./bin/login.js');
-var randString = require('./bin/randString.js');
 var RedisStore = require('connect-redis')(session);
-var submission = require('./bin/submission.js');
-var fetchScores = require('./bin/fetch-scores.js');
-var http = require('http');
-var fs = require('fs');
-var jade = require('jade');
-var parseParam = require('./bin/parse-param.js');
 var sessionMiddleware = session({
-    secret: randString(10),
+    secret: require('./bin/rand-string.js')(10),
     cookie: {maxAge: 3600000},
     saveUninitialized: false,
     resave: false,
     store: new RedisStore({url: process.env.REDIS_URL})
 });
 
-var server = http.createServer(app);
-var io = require('socket.io')(server);
+var bodyParser = require('body-parser');
+var fs = require('fs');
+var jade = require('jade');
+
+var signup = require('./bin/signup.js');
+var login = require('./bin/login.js');
+var submission = require('./bin/submission.js');
+var fetchScores = require('./bin/fetch-scores.js');
 
 app.use(sessionMiddleware);
 
@@ -39,22 +36,11 @@ app.set('port', process.env.PORT || 5000);
 app.set('views', 'views');
 app.set('view engine', 'jade');
 
-// app.locals.pretty = true;
-
-var htmlgen = jade.compileFile('views/page.jade');
+var generateHtml = jade.compileFile('views/page.jade');
 
 app.get('/', function (request, response) {
-    // response.render('page', {username: request.session.username, content: html, pretty:false});
-    // console.log(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
-    // console.log(request.sessionID);
-    response.end(htmlgen({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
+    response.end(generateHtml({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
 });
-
-// app.get('/:file', function(request, response, next) {
-//     var file = request.params.file;
-//     if (path.extname(file) === '.html') response.sendFile(response, file, request.session.username);
-//     else next();
-// });
 
 app.post('/login', function(request, response) {
     login(request, response, function(err) {
@@ -84,19 +70,15 @@ app.get('/scores', function(request, response) {
 
 app.use(express.static('public'));
 
-
-// console.log(parseParam('a','?a=b&c=d'));
-
 io.sockets.on('connection', function(socket) {
-    console.log(socket.request.session.username);
     fetchScores(socket.request, function(err, results) {
         socket.emit('message', results);
         socket.join(socket.request.session.username);
     })
-    // var username = store.get(ws.upgradeReq)
-    //    console.log(parseParam('connect.sid', '?' + ws.upgradeReq.headers.cookie));
 })
 
-server.listen(app.get('port'), function() {
-    console.log('Listening on port ' + app.get('port'));
-});
+setTimeout(function() {
+    server.listen(app.get('port'), function() {
+        console.log('Listening on port ' + app.get('port'));
+    });
+}, 5000);

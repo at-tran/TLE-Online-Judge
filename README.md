@@ -28,11 +28,11 @@ An Online Judge for Computer Science teachers and students
 - Submit files :white_check_mark:
 - Web worker :white_check_mark:
 - User information
-- Results
+- Results :white_check_mark:
 - Single page :white_check_mark:
-- Serverside rendering
+- Serverside rendering :white_check_mark:
 - Error handlers
-- Web sockets
+- Web sockets :white_check_mark:
 
 ## Hosting
 This project is hosted by Heroku: <https://tle-online-judge.herokuapp.com/>
