@@ -72,7 +72,7 @@ app.use(express.static('public'));
 
 io.sockets.on('connection', function(socket) {
     fetchScores(socket.request, function(err, results) {
-        socket.emit('message', results);
+        socket.emit('message', {results: results});
         socket.join(socket.request.session.username);
     })
 })

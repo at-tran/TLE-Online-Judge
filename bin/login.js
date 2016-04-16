@@ -1,12 +1,7 @@
-var MongoClient = require('mongodb').MongoClient;
-var url = process.env.MONGOLAB_URI;
-
 var db;
-
-MongoClient.connect(url, function(err, mdb) {
-    if (err) throw Error('Cannot connect to MongoDB');
-    else db = mdb;
-})
+require('./connect-to-mongo.js')(function(mdb) {
+    db = mdb;
+});
 
 module.exports = function(request, response, callback) {
     db.collection('users').find({

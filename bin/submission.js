@@ -2,15 +2,10 @@ var kue = require('kue');
 var queue = kue.createQueue({
     redis: process.env.REDIS_URL
 });
-var MongoClient = require('mongodb').MongoClient;
-var url = process.env.MONGOLAB_URI;
-
 var db;
-
-MongoClient.connect(url, function(err, mdb) {
-    if (err) throw Error('Cannot connect to MongoDB');
-    else db = mdb;
-})
+require('./connect-to-mongo.js')(function(mdb) {
+    db = mdb;
+});
 
 function queueSubmission(submission, io) {
     queue.create('submission', submission).on('complete', function(result) {
