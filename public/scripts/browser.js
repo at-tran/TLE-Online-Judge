@@ -19674,76 +19674,69 @@
 
 	var io = __webpack_require__(327);
 
+	var ResultsTableColumns = {
+	    Username: "username",
+	    Problem: "problem",
+	    Score: "score",
+	    Time: "time"
+	};
+
 	module.exports = React.createClass({
 	    displayName: 'exports',
-
-	    ResultsTableColumns: [{
-	        name: "Username",
-	        key: "username"
-	    }, {
-	        name: "Problem",
-	        key: "problem"
-	    }, {
-	        name: "Score",
-	        key: "score"
-	    }, {
-	        name: "Time",
-	        key: "time"
-	    }],
 
 	    getInitialState: function getInitialState() {
 	        return {};
 	    },
 
 	    componentWillMount: function componentWillMount() {
+	        var _this = this;
+
 	        this.socket = io.connect(location.origin);
 	        this.socket.on('message', function (data) {
+	            console.log(data);
 	            for (var key in data) {
-	                if (this.state[key] === undefined) {
-	                    var newState = this.state;
-	                    newState[key] = data[key];
-	                    this.setState(newState);
-	                } else this.setState(this.state[key].concat(data[key]));
+	                var newState = _this.state;
+	                if (newState[key] === undefined) newState[key] = data[key];else newState[key].push(data[key]);
+	                _this.setState(newState);
 	            }
-	        }.bind(this));
+	        });
 	    },
 
 	    render: function render() {
+	        var tabs = [{
+	            title: React.createElement(
+	                'span',
+	                { className: 'glyphicon glyphicon-home' },
+	                ' Home'
+	            ),
+	            content: "Welcome home"
+	        }, {
+	            title: React.createElement(
+	                'span',
+	                { className: 'glyphicon glyphicon-list-alt' },
+	                ' Problem'
+	            ),
+	            content: "Prepare to face the challenge"
+	        }, {
+	            title: React.createElement(
+	                'span',
+	                { className: 'glyphicon glyphicon-signal' },
+	                ' Status'
+	            ),
+	            content: React.createElement(CustomTable, { data: this.state.results, columns: ResultsTableColumns })
+	        }, {
+	            title: React.createElement(
+	                'span',
+	                { className: 'glyphicon glyphicon-flag' },
+	                ' Help'
+	            ),
+	            content: "Haaaaaaaalp"
+	        }];
 	        return React.createElement(
 	            'div',
 	            null,
 	            React.createElement(UploadModal, null),
-	            React.createElement(NavBar, {
-	                tabs: [{
-	                    title: React.createElement(
-	                        'span',
-	                        { className: 'glyphicon glyphicon-home' },
-	                        ' Home'
-	                    ),
-	                    content: "Welcome home"
-	                }, {
-	                    title: React.createElement(
-	                        'span',
-	                        { className: 'glyphicon glyphicon-list-alt' },
-	                        ' Problem'
-	                    ),
-	                    content: "Prepare to face the challenge"
-	                }, {
-	                    title: React.createElement(
-	                        'span',
-	                        { className: 'glyphicon glyphicon-signal' },
-	                        ' Status'
-	                    ),
-	                    content: React.createElement(CustomTable, { data: this.state.results, columns: this.ResultsTableColumns })
-	                }, {
-	                    title: React.createElement(
-	                        'span',
-	                        { className: 'glyphicon glyphicon-flag' },
-	                        ' Help'
-	                    ),
-	                    content: "Haaaaaaaalp"
-	                }]
-	            })
+	            React.createElement(NavBar, { tabs: tabs })
 	        );
 	    }
 	});
@@ -57762,19 +57755,32 @@
 	            null,
 	            '"Loading..."'
 	        );
+
 	        var rows = this.props.data.map(function (row, index) {
+	            var data = [];
+	            for (var key in _this.props.columns) {
+	                data.push(React.createElement(
+	                    'td',
+	                    { key: key },
+	                    row[_this.props.columns[key]]
+	                ));
+	            };
 	            return React.createElement(
 	                'tr',
 	                { key: index, className: 'success' },
-	                _this.props.columns.map(function (column, index) {
-	                    return React.createElement(
-	                        'td',
-	                        { key: index },
-	                        row[column.key]
-	                    );
-	                })
+	                data
 	            );
 	        });
+
+	        var headings = [];
+	        for (var key in this.props.columns) {
+	            headings.push(React.createElement(
+	                'td',
+	                { key: key },
+	                key
+	            ));
+	        }
+
 	        return React.createElement(
 	            Table,
 	            null,
@@ -57784,13 +57790,7 @@
 	                React.createElement(
 	                    'tr',
 	                    null,
-	                    this.props.columns.map(function (column, index) {
-	                        return React.createElement(
-	                            'td',
-	                            { key: index },
-	                            column.name
-	                        );
-	                    })
+	                    headings
 	                )
 	            ),
 	            React.createElement(

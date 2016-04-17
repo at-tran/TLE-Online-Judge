@@ -8,68 +8,49 @@ var NavBar = require('./navbar.js');
 
 var io = require('socket.io-client');
 
-module.exports = React.createClass({
-    ResultsTableColumns: [
-        {
-            name: "Username",
-            key: "username"
-        },
-        {
-            name: "Problem",
-            key: "problem"
-        },
-        {
-            name: "Score",
-            key: "score"
-        },
-        {
-            name: "Time",
-            key: "time"
-        }
-    ],
+var ResultsTableColumns = {
+    Username: "username",
+    Problem: "problem",
+    Score: "score",
+    Time: "time"
+}
 
+module.exports = React.createClass({
     getInitialState: function() {
         return {};
     },
 
     componentWillMount: function() {
         this.socket = io.connect(location.origin);
-        this.socket.on('message', function(data) {
+        this.socket.on('message', (data) => {
+            console.log(data);
             for (var key in data) {
-                if (this.state[key] === undefined) {
-                    var newState = this.state;
-                    newState[key] = data[key];
-                    this.setState(newState);
-                }
-                else this.setState(this.state[key].concat(data[key]));
+                var newState = this.state;
+                if (newState[key] === undefined) newState[key] = data[key];
+                else newState[key].push(data[key]);
+                this.setState(newState);
             }
-        }.bind(this));
+        });
     },
 
     render: function() {
+        var tabs = [{
+            title: <span className="glyphicon glyphicon-home"> Home</span>,
+            content: "Welcome home"
+        }, {
+            title: <span className="glyphicon glyphicon-list-alt"> Problem</span>,
+            content: "Prepare to face the challenge"
+        }, {
+            title: <span className="glyphicon glyphicon-signal"> Status</span>,
+            content: <CustomTable data={this.state.results} columns={ResultsTableColumns} />
+        }, {
+            title: <span className="glyphicon glyphicon-flag"> Help</span>,
+            content: "Haaaaaaaalp"
+        }];
         return (
             <div>
                 <UploadModal />
-                <NavBar
-                    tabs={[
-                        {
-                            title: <span className="glyphicon glyphicon-home"> Home</span>,
-                            content: "Welcome home"
-                        },
-                        {
-                            title: <span className="glyphicon glyphicon-list-alt"> Problem</span>,
-                            content: "Prepare to face the challenge"
-                        },
-                        {
-                            title: <span className="glyphicon glyphicon-signal"> Status</span>,
-                            content: <CustomTable data={this.state.results} columns={this.ResultsTableColumns} />
-                        },
-                        {
-                            title: <span className="glyphicon glyphicon-flag"> Help</span>,
-                            content: "Haaaaaaaalp"
-                        }
-                    ]}
-                />
+                <NavBar tabs={tabs} />
             </div>
         );
     }
