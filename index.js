@@ -39,7 +39,8 @@ app.set('view engine', 'jade');
 var generateHtml = jade.compileFile('views/page.jade');
 
 app.get('/', function (request, response) {
-    response.end(generateHtml({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
+    response.redirect('home.html');
+    // response.end(generateHtml({username: request.session.username}).replace(/(\r\n|\n|\r)/gm,""));
 });
 
 app.post('/login', function(request, response) {
@@ -81,4 +82,4 @@ setTimeout(function() {
     server.listen(app.get('port'), function() {
         console.log('Listening on port ' + app.get('port'));
     });
-}, 5000);
+}, 10000);

@@ -107,7 +107,7 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div>
-                <Button bsStyle="primary" bsSize="large" onClick={this.showModal}>
+                <Button id="upload-button" bsStyle="primary" bsSize="large" onClick={this.showModal}>
                     Upload Submission
                 </Button>
                 <Modal show={this.state.show} onHide={this.hideModal}>

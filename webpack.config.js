@@ -3,7 +3,7 @@ module.exports = {
         browser: './scripts/browser.js'
     },
     output: {
-        path: './public/scripts',
+        path: './public/js',
         filename: '[name].js'
     },
     module: {

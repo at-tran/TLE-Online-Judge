@@ -1,14 +1,30 @@
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>TLE Online Judge</title>
-        <link rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.css">
-        <link rel="stylesheet" href="stylesheets/home.css">
-    </head>
-    <body>
-        <div id="UploadModalButton"></div>
-        <div id="NavBar"></div>
-        <div id="UploadModal"></div>
-        <script src="scripts/app.js"></script>
-    </body>
+  <head>
+    <meta charset="utf-8">
+    <title>TLE Online Judge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css">
+
+    <!-- Loading Flat UI -->
+    <link rel="stylesheet" href="theme/css/flat-ui.min.css">
+
+    <!-- Custom -->
+    <link rel="stylesheet" href="css/home.css">
+  </head>
+  <body>
+    <h1 style="color: red; text-align: center; font-size: 24px;">TLE Online Judge</h1>
+    <h2>Welcome #{username}</h2>
+
+     <!-- Where everything important goes --> 
+    <div id="content"> </div>
+    
+    <!-- Main script -->
+    <script src="js/browser.js"></script>
+
+    <!-- Flat UI script -->
+    <script src="theme/js/flat-ui.min.js"></script>
+  </body>
 </html>

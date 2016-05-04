@@ -32145,7 +32145,7 @@
 	            null,
 	            React.createElement(
 	                Button,
-	                { bsStyle: 'primary', bsSize: 'large', onClick: this.showModal },
+	                { id: 'upload-button', bsStyle: 'primary', bsSize: 'large', onClick: this.showModal },
 	                'Upload Submission'
 	            ),
 	            React.createElement(
