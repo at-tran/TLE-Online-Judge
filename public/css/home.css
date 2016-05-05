@@ -18,20 +18,15 @@
 }
 
 /* Main CSS */
-* {
-  margin: 0px auto 0px;
-  padding: 0px; }
+body {
+   width:95%;
+   margin:0px auto 0px;
+  }
 
-header {
-  width: 100%;
-  height: 100px;
-  border-bottom: 1px solid gray; }
-  header h4 {
-    text-align: center; }
-
-#UploadModalButton {
-  float: left;
-  margin-left: 10px; }
+header{
+   width:100%;
+   height:40px;
+}
 
 .right-inner-addon {
   position: relative;
@@ -41,8 +36,34 @@ header {
     right: 0px;
     padding: 10px 12px; }
 
-#main_content {
-  margin-top: 80px; }
+#upload-button{
+  float:right;
+  margin-right:21%; 
+}
+
+footer{
+  width:100%;
+  margin:50px auto 0px;
+  background-color:#fff;
+  float:left;
+  border-top:1px solid gray;
+}
+footer h6{
+  text-align:center;
+  font-size:16px;
+}
+
+/*Responsive*/
+@media screen and (max-width: 480px){
+  header{
+    width:auto;
+  }
+  #content{
+    width:auto;
+  }
+  footer{
+    width:auto;
+  }
+}
 
 /*# sourceMappingURL=home.css.map */
-
