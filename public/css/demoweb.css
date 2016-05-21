@@ -1,0 +1,90 @@
+*{
+	width:98%;
+	margin:5px auto 0px;
+	padding:0;
+}
+
+ul li{
+	list-style-type:none;
+}
+
+a{
+	text-decoration:none;
+}
+
+header{
+   text-align:center;	
+   background-color:#fff;
+   color:red;
+   height:90px;
+   border-bottom:1px solid #BDBDBD;
+}
+
+nav{
+	width:72.65%;
+	height:35px;
+	background-color:#2E64FE;
+	margin:20px auto 0px;
+	-webkit-border-radius:10px 10px 10px 10px;
+	-moz-border-radius:10px 10px 10px 10px;
+}
+nav ul li{ 
+    float:left;
+    font-size:18px;
+    width:104px;
+    border-right:1px solid #fff;
+    text-align:center;
+    margin-top:6px;
+}
+nav ul li a{color:#fff}
+nav ul li a:hover{color:#ff0000}
+nav ul li:last-child{
+	border-right:none;
+	margin-top:2px;
+	margin-left:9px;
+}
+#modalsubmit{margin-top:19px;}
+
+#main{
+	width:100%;
+	margin-top:20px;
+}
+
+form{
+	float:right;
+	width:250px;
+    height:500px;
+}
+#submit{
+	width:100%;
+    height:200px;
+	border:1px solid #58FAF4;
+	margin-top:40px;
+	-webkit-border-radius:10px 10px 10px 10px;
+	-moz-border-radius:10px 10px 10px 10px;
+}
+
+#content{
+	width:900px;
+	float:left;
+}
+#table_status{
+	width:100%;
+}
+th,td{
+	border:1px solid red;
+}
+.time_submit, .time, .mem, .result, .language{
+    width:100px;
+    text-align:center;
+}
+.problem{
+	width:400px;
+	text-align:center;
+}
+
+footer{
+	border-top:1px solid #BDBDBD;
+	margin-top:800px;
+	text-align:center;
+}

@@ -1,0 +1,69 @@
+/* Table transitions */
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+/* Main CSS */
+body {
+   width:95%;
+   margin:0px auto 0px;
+  }
+
+header{
+   width:100%;
+   height:40px;
+}
+
+.right-inner-addon {
+  position: relative;
+  width: 300px; }
+  .right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px; }
+
+#upload-button{
+  float:right;
+  margin-right:21%; 
+}
+
+footer{
+  width:100%;
+  margin:50px auto 0px;
+  background-color:#fff;
+  float:left;
+  border-top:1px solid gray;
+}
+footer h6{
+  text-align:center;
+  font-size:16px;
+}
+
+/*Responsive*/
+@media screen and (max-width: 480px){
+  header{
+    width:auto;
+  }
+  #content{
+    width:auto;
+  }
+  footer{
+    width:auto;
+  }
+}
+
+/*# sourceMappingURL=home.css.map */

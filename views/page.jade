@@ -1,0 +1,13 @@
+doctype
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        title TLE Online Judge
+        link(rel="stylesheet" href="stylesheets/bootstrap/css/bootstrap.css")
+        link(rel="stylesheet" href="stylesheets/home.css")
+    body
+        h1(style="color: red; text-align: center; font-size: 24px;") TLE Online Judge
+        h2 Welcome #{username}
+        div(id="content")
+            include rendered.html
+        script(src="scripts/browser.js")
