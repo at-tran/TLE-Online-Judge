@@ -1,7 +1,7 @@
 {
 	"name": "Elephant",
 	"code": 1,
-	"testNum": 10,
+	"testNum": 100,
 	"timeLim": 1000,
 	"usrChecker": "false",
 	"ftest": "0"

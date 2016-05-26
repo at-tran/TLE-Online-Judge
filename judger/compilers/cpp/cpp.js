@@ -12,16 +12,16 @@ module.exports = {
 	run: function(dir, time, callback) {
 		var date = new Date();
 		var timeOut, stimer = date.getTime();
-		child.exec('./a.out < '+ dir +'/input', function(err,out,errM){
-			clearTimeout(timeOut);
-			var date = new Date(), etimer = date.getTime(), timer = etimer-stimer;
-			if(err === null) callback(err, errM, out, timer);
-			else callback(err, errM, '', -1);
-		});
-		timeOut = setTimeout(function () {
-			child.exec('kill `pgrep a.out`');
-			var date = new Date(), etimer = date.getTime(), timer = etimer-stimer;
-			callback('timeout', 'Time limit exceeded', null, timer);
-		}, time);
+        try{
+            var output = child.execSync('./a.out < '+ dir +'/input',{
+                timeout: time
+            })
+            var date = new Date(), etimer = date.getTime(), timer = etimer-stimer;
+            callback(null,null,output.toString(),timer);
+        }catch(e){
+            child.exec('kill `pgrep a.out`');
+            if(e.code='ETIMEDOUT') callback('timeout', '  Time limit exceeded', null, time);
+            else callback(e,null,null,null);
+        }
 	}
 }
