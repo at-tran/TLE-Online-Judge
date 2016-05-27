@@ -6,10 +6,13 @@ module.exports = {
 		var problemDir = '../problems/' + problemCode,
 			problemProperties = require(problemDir + '/properties.json'),
 			lang = gen.getComplierAPI(language),
-			langCpler = require('./compilers/'+lang+'.js');
+			langCpler = require('./compilers/'+lang+'.js'),
+			Obj={err:undefined, ac:undefined};
 		console.log(`Problem: ${problemProperties.name} - Code: ${problemProperties.code}`);
-		langCpler.startJudge(srcCode, problemProperties, function(error,errorM){
-			console.log(`${errorM}`);
+		langCpler.startJudge(srcCode, problemProperties, function(error,errorM,AC){
+			Obj.err=errM;
+			Obj.ac=AC;
 		});
+		return obj;
 	}
 }
