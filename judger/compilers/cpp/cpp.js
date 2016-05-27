@@ -20,7 +20,7 @@ module.exports = {
             callback(null,null,output.toString(),timer);
         }catch(e){
             child.exec('kill `pgrep a.out`');
-            if(e.code='ETIMEDOUT') callback('timeout', '  Time limit exceeded', null, time);
+            if(e.code='ETIMEDOUT') callback('timeout', 'Time limit exceeded', null, time);
             else callback(e,null,null,null);
         }
 	}
