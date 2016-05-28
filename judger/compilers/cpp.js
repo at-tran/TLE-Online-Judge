@@ -3,8 +3,10 @@ var fs = require('fs');
 
 module.exports = {
 	startJudge: function(srcCode, problemProperties, callback){
+        console.log('Compiling...');
 		cpp.compile(srcCode, function(error){
 			if(error === null){
+                console.log('Done!\n');
 				var testNum = problemProperties.testNum,
 					ftest = problemProperties.ftest,
 					timeLim = problemProperties.timeLim,
