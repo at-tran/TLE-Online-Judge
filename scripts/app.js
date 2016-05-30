@@ -27,7 +27,7 @@ module.exports = React.createClass({
             for (var key in data) {
                 var newState = this.state;
                 if (newState[key] === undefined) newState[key] = data[key];
-                else newState[key].push(data[key]);
+                else newState[key].unshift(data[key]);
                 this.setState(newState);
             }
         });

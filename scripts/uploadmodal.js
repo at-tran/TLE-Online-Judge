@@ -93,7 +93,7 @@ module.exports = React.createClass({
     handleSubmit: function() {
         $.ajax('upload', {
             type: 'POST',
-            dataType: 'json',
+            // dataType: 'json',
             contentType: 'application/json; charset=UTF-8',
             data: JSON.stringify(this.state.contents),
             success: function() {

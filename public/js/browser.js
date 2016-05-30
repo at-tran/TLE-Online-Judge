@@ -19696,7 +19696,7 @@
 	            console.log(data);
 	            for (var key in data) {
 	                var newState = _this.state;
-	                if (newState[key] === undefined) newState[key] = data[key];else newState[key].push(data[key]);
+	                if (newState[key] === undefined) newState[key] = data[key];else newState[key].unshift(data[key]);
 	                _this.setState(newState);
 	            }
 	        });
@@ -32126,7 +32126,7 @@
 	    handleSubmit: function handleSubmit() {
 	        $.ajax('upload', {
 	            type: 'POST',
-	            dataType: 'json',
+	            // dataType: 'json',
 	            contentType: 'application/json; charset=UTF-8',
 	            data: JSON.stringify(this.state.contents),
 	            success: function success() {
@@ -57753,7 +57753,7 @@
 	        if (this.props.data === undefined) return React.createElement(
 	            'div',
 	            null,
-	            '"Loading..."'
+	            'Loading...'
 	        );
 
 	        var rows = this.props.data.map(function (row, index) {

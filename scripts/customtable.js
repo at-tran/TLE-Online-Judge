@@ -4,7 +4,7 @@ var ReactCSSTransitionGroup = require('react/lib/ReactCSSTransitionGroup');
 
 module.exports = React.createClass({
     render: function() {
-        if (this.props.data === undefined) return <div>"Loading..."</div>;
+        if (this.props.data === undefined) return <div>Loading...</div>;
 
         var rows = this.props.data.map((row, index) => {
             var data = [];
