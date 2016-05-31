@@ -53,7 +53,17 @@ footer h6{
   font-size:16px;
 }
 
-/*Responsive*/
+/*Responsive for laptop*/
+@media screen and (min-width: 482px) and (max-width: 1025px){
+
+#upload-button{
+  float:right;
+  margin-right:2%; 
+}
+ 
+}
+
+/*Responsive for smartphone,ipad...*/
 @media screen and (max-width: 480px){
   header{
     width:auto;
