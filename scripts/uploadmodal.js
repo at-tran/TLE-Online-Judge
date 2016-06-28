@@ -2,21 +2,25 @@ var React = require('react');
 var Dropzone = require('react-dropzone');
 var Modal = require('react-bootstrap/lib/Modal');
 var Button = require('react-bootstrap/lib/Button');
-var Input = require('react-bootstrap/lib/Input');
-var AceEditor = require('react-ace');
+var AceEditor = require('react-ace').default;
+var Tabs = require('react-bootstrap/lib/Tabs');
+var Tab = require('react-bootstrap/lib/Tab');
+var Select = require('react-select');
 require('brace/mode/pascal');
 require('brace/theme/monokai');
 
-var FileContent = React.createClass({
-    shouldComponentUpdate: function() {
-        return false;
-    },
+const languages = [
+    { value: 'pascal', label: 'Pascal' },
+    { value: 'cpp', label: 'C++'}
+];
 
+var FileContent = React.createClass({
     render: function() {
         return (
             <div>
                 {this.props.data.filename} <br/>
-                <Button onClick={this.props.onClick}>Remove</Button>
+
+                <Button onClick={this.props.onRemove}>Remove</Button>
                 <AceEditor
                     mode="pascal"
                     theme="monokai"
@@ -27,20 +31,40 @@ var FileContent = React.createClass({
                     enableBasicAutocompletion={false}
                     enableLiveAutocompletion={false}
                 />
+
+                <Select
+                    name="filetype"
+                    value={this.props.data.filetype}
+                    simpleValue
+                    options={languages}
+                    onChange={this.props.onChangeFileType}
+                    clearable={false}
+                />
+
             </div>
         );
     }
 });
 
-var FileContentList = React.createClass({
+var FileContentTabs = React.createClass({
     render: function() {
         var contents = this.props.contents.map(function(content, index) {
-            return <FileContent data={content} key={index} index={index} onChange={this.props.onChange(index)} onClick={this.props.onClick(index)}/>;
+            return (
+                <Tab key={index} eventKey={index} title={content.filename}>
+                    <FileContent
+                        data={content}
+                        index={index}
+                        onRemove={this.props.onRemove(index)}
+                        onChange={this.props.onChange(index)}
+                        onChangeFileType={this.props.onChangeFileType(index)}
+                    />
+                </Tab>
+            );
         }.bind(this));
         return (
-            <div>
+            <Tabs defaultActiveKey={0}>
                 {contents}
-            </div>
+            </Tabs>
         );
     }
 })
@@ -66,10 +90,18 @@ module.exports = React.createClass({
         }.bind(this);
     },
 
-    onClick: function(index) {
+    onRemove: function(index) {
         return function() {
             var newContents = this.state.contents;
             newContents.splice(index, 1);
+            this.setState({contents: newContents});
+        }.bind(this);
+    },
+
+    onChangeFileType: function(index) {
+        return function(newValue) {
+            var newContents = this.state.contents;
+            newContents[index].filetype = newValue;
             this.setState({contents: newContents});
         }.bind(this);
     },
@@ -82,7 +114,8 @@ module.exports = React.createClass({
                     contents: this.state.contents.concat({
                         filename: file.name,
                         content: e.target.result,
-                        size: file.size
+                        size: file.size,
+                        filetype: "pascal"
                     })
                 });
             }.bind(this);
@@ -118,7 +151,12 @@ module.exports = React.createClass({
                         <Dropzone onDrop={this.onDrop}>
                             <div>Upload</div>
                         </Dropzone>
-                        <FileContentList contents={this.state.contents} onChange={this.onChange} onClick={this.onClick}/>
+                        <FileContentTabs
+                            contents={this.state.contents}
+                            onChange={this.onChange}
+                            onRemove={this.onRemove}
+                            onChangeFileType={this.onChangeFileType}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
                         <Button onClick={this.handleSubmit}>

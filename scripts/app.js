@@ -12,6 +12,7 @@ var ResultsTableColumns = {
     Username: "username",
     Problem: "problem",
     Score: "score",
+    "File type": "filetype",
     Time: "time"
 }
 
