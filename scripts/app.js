@@ -10,9 +10,9 @@ var io = require('socket.io-client');
 
 var ResultsTableColumns = {
     Username: "username",
-    Problem: "problem",
+    "Problem ID": "ID",
     Score: "score",
-    "File type": "filetype",
+    Language: "language",
     Time: "time"
 }
 

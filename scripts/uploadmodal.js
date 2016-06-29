@@ -6,40 +6,48 @@ var AceEditor = require('react-ace').default;
 var Tabs = require('react-bootstrap/lib/Tabs');
 var Tab = require('react-bootstrap/lib/Tab');
 var Select = require('react-select');
+var path = require('path');
+var FormControl = require('react-bootstrap/lib/FormControl');
 require('brace/mode/pascal');
 require('brace/theme/monokai');
 
 const languages = [
-    { value: 'pascal', label: 'Pascal' },
-    { value: 'cpp', label: 'C++'}
+    { value: 'Pascal', label: 'Pascal' },
+    { value: 'C++', label: 'C++'},
+    { value: 'Python', label: 'Python'}
 ];
 
 var FileContent = React.createClass({
     render: function() {
         return (
             <div>
-                {this.props.data.filename} <br/>
-
-                <Button onClick={this.props.onRemove}>Remove</Button>
                 <AceEditor
                     mode="pascal"
                     theme="monokai"
                     value={this.props.data.content}
                     onChange={this.props.onChange}
                     name={this.props.index.toString()}
-                    editorProps={{$blockScrolling: Infinity}}
-                    enableBasicAutocompletion={false}
-                    enableLiveAutocompletion={false}
+                    editorProps={{$blockScrolling: true}}
+                />
+
+                <FormControl
+                    type="text"
+                    value={this.props.data.ID}
+                    placeholder="Problem ID"
+                    onChange={this.props.onChangeID}
                 />
 
                 <Select
-                    name="filetype"
-                    value={this.props.data.filetype}
+                    name="language"
+                    value={this.props.data.language}
                     simpleValue
                     options={languages}
-                    onChange={this.props.onChangeFileType}
+                    onChange={this.props.onChangeLanguage}
                     clearable={false}
+                    placeholder="Language"
                 />
+
+                <Button onClick={this.props.onRemove}>Remove</Button>
 
             </div>
         );
@@ -50,19 +58,20 @@ var FileContentTabs = React.createClass({
     render: function() {
         var contents = this.props.contents.map(function(content, index) {
             return (
-                <Tab key={index} eventKey={index} title={content.filename}>
+                <Tab key={index} eventKey={index} title={content.ID}>
                     <FileContent
                         data={content}
                         index={index}
                         onRemove={this.props.onRemove(index)}
                         onChange={this.props.onChange(index)}
-                        onChangeFileType={this.props.onChangeFileType(index)}
+                        onChangeLanguage={this.props.onChangeLanguage(index)}
+                        onChangeID={this.props.onChangeID(index)}
                     />
                 </Tab>
             );
         }.bind(this));
         return (
-            <Tabs defaultActiveKey={0}>
+            <Tabs defaultActiveKey={0} id="file-content-tabs">
                 {contents}
             </Tabs>
         );
@@ -98,24 +107,41 @@ module.exports = React.createClass({
         }.bind(this);
     },
 
-    onChangeFileType: function(index) {
+    onChangeLanguage: function(index) {
         return function(newValue) {
             var newContents = this.state.contents;
-            newContents[index].filetype = newValue;
+            newContents[index].language = newValue;
             this.setState({contents: newContents});
         }.bind(this);
+    },
+
+    onChangeID: function(index) {
+        return function(e) {
+            var newContents = this.state.contents;
+            newContents[index].ID = e.target.value;
+            this.setState({contents: newContents});
+        }.bind(this);
+    },
+
+    getLanguageFromExt: function(ext) {
+        switch(ext) {
+            case '.cpp': return 'C++';
+            case '.pas': return 'Pascal';
+            default: return null;
+        }
     },
 
     onDrop: function(files) {
         files.forEach(function(file) {
             var fileReader = new FileReader();
             fileReader.onload = function(e) {
+                var ext = path.extname(file.name);
                 this.setState({
                     contents: this.state.contents.concat({
-                        filename: file.name,
+                        ID: path.basename(file.name, ext),
                         content: e.target.result,
                         size: file.size,
-                        filetype: "pascal"
+                        language: this.getLanguageFromExt(ext)
                     })
                 });
             }.bind(this);
@@ -155,7 +181,8 @@ module.exports = React.createClass({
                             contents={this.state.contents}
                             onChange={this.onChange}
                             onRemove={this.onRemove}
-                            onChangeFileType={this.onChangeFileType}
+                            onChangeLanguage={this.onChangeLanguage}
+                            onChangeID={this.onChangeID}
                         />
                     </Modal.Body>
                     <Modal.Footer>

@@ -25,7 +25,7 @@ module.exports = React.createClass({
                         <li><a href="login.html"><span className="glyphicon glyphicon-log-in"></span> Login</a></li>
                     </ul>
                 </div>
-                <Tabs defaultActiveKey={0}>
+                <Tabs defaultActiveKey={0} id="navbar">
                     {tabs}
                 </Tabs>
             </nav>
