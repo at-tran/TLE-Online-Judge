@@ -1,10 +1,10 @@
-var cpp = require('./cpp/cpp.js');
+var pascal = require('./pascal/pascal.js');
 var fs = require('fs');
 
 module.exports = {
-	startJudge: function(srcCode, problemProperties, callback){
+    startJudge: function(srcCode, problemProperties, callback){
         console.log('Compiling...');
-		cpp.compile(srcCode, function(error){
+		pascal.compile(srcCode, function(error){
 			if(error === null){
                 console.log('Done!\n');
 				var testNum = problemProperties.testNum,
@@ -25,7 +25,7 @@ module.exports = {
 					console.log(`Running test #${i}... `);
 
                     // start running
-                    cpp.run(dir, timeLim, function(err, errM, out, time){
+                    pascal.run(dir, timeLim, function(err, errM, out, time){
 						if(err === null){
                             // delete end-line character at the end of output
                             out = out.replace(/^\s+|\s+$/g, '');

@@ -2,7 +2,7 @@
 	"name": "Elephant",
 	"code": 1,
 	"testNum": 100,
-	"timeLim": 1000,
+	"timeLim": 3000,
 	"usrChecker": "false",
 	"ftest": "0"
 }

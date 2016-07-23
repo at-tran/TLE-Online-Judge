@@ -1,12 +1,10 @@
-var cpp = require('./cpp/cpp.js');
+var python = require('./python/python3.js');
 var fs = require('fs');
 
 module.exports = {
 	startJudge: function(srcCode, problemProperties, callback){
-        console.log('Compiling...');
-		cpp.compile(srcCode, function(error){
+		python.compile(srcCode, function(error){
 			if(error === null){
-                console.log('Done!\n');
 				var testNum = problemProperties.testNum,
 					ftest = problemProperties.ftest,
 					timeLim = problemProperties.timeLim,
@@ -25,19 +23,19 @@ module.exports = {
 					console.log(`Running test #${i}... `);
 
                     // start running
-                    cpp.run(dir, timeLim, function(err, errM, out, time){
+                    python.run(dir, timeLim, function(err, errM, out, time){
 						if(err === null){
                             // delete end-line character at the end of output
                             out = out.replace(/^\s+|\s+$/g, '');
 							checker = (out === answer);
-							if(checker === false) {callback('WA', 'Wrong answer', false, null);}
+                            if(checker === false) {callback('WA', 'Wrong answer', false, null);}
                             worstTime = Math.max(worstTime, time);
                             // else console.log('  OK');
                             // console.log(`  Input: ${stdin}\n  Answer: ${answer}\n  User Output: ${out}`);
 							// console.log(`  Timer: ${time}ms\n  Checker: ${checker}\n`);
 						}else {
                             if(err==='timeout') errM=errM+' on test '+i;
-                            callback(err, errM, false, null); checker = false;
+                            callback(err, 'Error on test '+i+'\n'+errM, false, null); checker = false;
                         }
 					});
                     // no AC, no fun :(
@@ -46,7 +44,7 @@ module.exports = {
                     // if AC then...
                     if(i===ftest+testNum-1) callback(null, null, true, worstTime);
 				}
-			}else callback('CE', 'Compiling Error:\n'+error.message, false);
+			}else callback('CE', 'Compiling Error:\n'+error.message, false, null);
 		});
 	}
 }
