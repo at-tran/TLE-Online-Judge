@@ -21,6 +21,9 @@ module.exports = {
 			callback(err);
 		});
 	},
+	memTest: function(dir, memLim, callback){
+		
+	},
 	run: function(dir, time, callback) {
 		var date = new Date();
 		var timeOut, startTimer = date.getTime();

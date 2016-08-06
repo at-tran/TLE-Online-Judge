@@ -10,10 +10,21 @@ module.exports = {
 				var testNum = problemProperties.testNum,
 					ftest = problemProperties.ftest,
 					timeLim = problemProperties.timeLim,
+					memLim = problemProperties.memLim,
 					usrChecker = problemProperties.usrChecker;
-				var stdin, answer, checker=true, worstTime=0;
-                // run throught tests
-                console.log('Running...\n');
+				var stdin, answer, checker=true, worstTime=0, passMemTest=true;
+
+				console.log('Running...\n');
+				// check memory limit
+				cpp.checkMem(dir, memLim, fuction(pass){
+					if(pass === false){
+						callback('MLE','Memory limit exceeded',false,null);
+						passMemTest = false;
+					}
+				});
+
+				if(passMemTest === false) return;
+				// run throught tests
 				for(var i=ftest; i<ftest+testNum; i++){
                     // get test directory
 					var dir = './problems/'+problemProperties.code+'/test'+i;
@@ -22,7 +33,7 @@ module.exports = {
 					stdin = fs.readFileSync(dir+'/input','utf-8') + '\n';
 					answer = fs.readFileSync(dir+'/answer','utf-8').replace(/^\s+|\s+$/g, '');
 
-					console.log(`Running test #${i}... `);
+					// console.log(`Running test #${i}... `);
 
                     // start running
                     cpp.run(dir, timeLim, function(err, errM, out, time){
@@ -37,12 +48,12 @@ module.exports = {
 							// console.log(`  Timer: ${time}ms\n  Checker: ${checker}\n`);
 						}else {
                             if(err==='timeout') errM=errM+' on test '+i;
-                            callback(err, errM, false, null); checker = false;
+                            callback('TLE', errM, false, null); checker = false;
                         }
 					});
                     // no AC, no fun :(
                     if(checker === false) break;
-                    console.log('OK!\n');
+                    // console.log('OK!\n');
                     // if AC then...
                     if(i===ftest+testNum-1) callback(null, null, true, worstTime);
 				}

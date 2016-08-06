@@ -1,8 +1,9 @@
 {
 	"name": "Elephant",
 	"code": 1,
-	"testNum": 100,
+	"testNum": 10,
 	"timeLim": 3000,
+	"memLim": 256,
 	"usrChecker": "false",
 	"ftest": "0"
 }
